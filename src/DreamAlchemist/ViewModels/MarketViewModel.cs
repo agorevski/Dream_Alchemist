@@ -12,6 +12,7 @@ public partial class MarketViewModel : BaseViewModel
 {
     private readonly IMarketService _marketService;
     private readonly IGameStateService _gameStateService;
+    private readonly IInventoryService _inventoryService;
 
     [ObservableProperty]
     private ObservableCollection<MarketPriceDto> marketItems = new();
@@ -37,14 +38,20 @@ public partial class MarketViewModel : BaseViewModel
     [ObservableProperty]
     private bool showTrendingOnly;
 
+    public bool CanSell => SelectedItem != null && SelectedItem.PlayerQuantity > 0;
+    
+    public bool CanBuy => SelectedItem != null && PlayerCoins >= (int)Math.Ceiling(SelectedItem.CurrentPrice);
+
     public MarketViewModel(
         INavigationService navigationService,
         IMarketService marketService,
-        IGameStateService gameStateService)
+        IGameStateService gameStateService,
+        IInventoryService inventoryService)
         : base(navigationService)
     {
         _marketService = marketService;
         _gameStateService = gameStateService;
+        _inventoryService = inventoryService;
         
         Title = "Dream Market";
     }
@@ -88,8 +95,11 @@ public partial class MarketViewModel : BaseViewModel
             MarketItems.Clear();
             foreach (var price in prices)
             {
+                // Get player's inventory quantity for this ingredient
+                price.PlayerQuantity = _inventoryService.GetItemQuantity(price.IngredientId);
+                
                 MarketItems.Add(price);
-                System.Diagnostics.Debug.WriteLine($"Added market item: {price.IngredientName} - {price.CurrentPrice} coins");
+                System.Diagnostics.Debug.WriteLine($"Added market item: {price.IngredientName} - {price.CurrentPrice} coins (Player owns: {price.PlayerQuantity})");
             }
             
             System.Diagnostics.Debug.WriteLine($"Final MarketItems count: {MarketItems.Count}");
@@ -110,7 +120,15 @@ public partial class MarketViewModel : BaseViewModel
             
             if (success)
             {
-                await LoadMarketDataAsync();
+                // Update the item's player quantity in place
+                itemToBuy.PlayerQuantity = _inventoryService.GetItemQuantity(itemToBuy.IngredientId);
+                
+                // Update player coins display
+                PlayerCoins = _gameStateService.PlayerState.Coins;
+                
+                // Notify that CanSell might have changed
+                OnPropertyChanged(nameof(CanSell));
+                
                 BuyQuantity = 1;
             }
             else
@@ -134,7 +152,15 @@ public partial class MarketViewModel : BaseViewModel
             
             if (success)
             {
-                await LoadMarketDataAsync();
+                // Update the item's player quantity in place
+                itemToSell.PlayerQuantity = _inventoryService.GetItemQuantity(itemToSell.IngredientId);
+                
+                // Update player coins display
+                PlayerCoins = _gameStateService.PlayerState.Coins;
+                
+                // Notify that CanSell might have changed
+                OnPropertyChanged(nameof(CanSell));
+                
                 SellQuantity = 1;
             }
             else
@@ -193,5 +219,22 @@ public partial class MarketViewModel : BaseViewModel
     {
         BuyQuantity = 1;
         SellQuantity = 1;
+        OnPropertyChanged(nameof(CanSell));
+        OnPropertyChanged(nameof(CanBuy));
+    }
+
+    partial void OnPlayerCoinsChanged(int value)
+    {
+        OnPropertyChanged(nameof(CanBuy));
+    }
+
+    [RelayCommand]
+    private void SelectionChanged(MarketPriceDto? item)
+    {
+        // This command is triggered when CollectionView selection changes
+        // The SelectedItem property will already be set by the binding
+        System.Diagnostics.Debug.WriteLine($"Selection changed to: {item?.IngredientName ?? "NULL"}");
+        OnPropertyChanged(nameof(CanSell));
+        OnPropertyChanged(nameof(CanBuy));
     }
 }

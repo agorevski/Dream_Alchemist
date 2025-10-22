@@ -20,19 +20,6 @@
                 <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
                        FontSize="16"
                        TextColor="#FCD34D"/>
-                       
-                <HorizontalStackLayout Spacing="10">
-                    <Button Text="🔄 Refresh"
-                            Command="{Binding RefreshMarketCommand}"
-                            BackgroundColor="#374151"
-                            TextColor="White"
-                            HeightRequest="40"/>
-                    <Button Text="⭐ Trending"
-                            Command="{Binding ToggleTrendingFilterCommand}"
-                            BackgroundColor="{Binding ShowTrendingOnly, Converter={StaticResource BoolToColorConverter}}"
-                            TextColor="White"
-                            HeightRequest="40"/>
-                </HorizontalStackLayout>
             </VerticalStackLayout>
         </Frame>
 
@@ -40,10 +27,24 @@
         <CollectionView Grid.Row="1" 
                         ItemsSource="{Binding MarketItems}"
                         SelectedItem="{Binding SelectedItem}"
-                        SelectionMode="Single">
+                        SelectionMode="Single"
+                        SelectionChangedCommand="{Binding SelectionChangedCommand}"
+                        SelectionChangedCommandParameter="{Binding SelectedItem}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="dto:MarketPriceDto">
-                    <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
+                    <Border BackgroundColor="#25253E" 
+                            Padding="15" 
+                            Margin="0,5"
+                            StrokeThickness="2"
+                            Stroke="#374151">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" 
+                                        Binding="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=SelectedItem.IngredientId}" 
+                                        Value="{Binding IngredientId}">
+                                <Setter Property="BackgroundColor" Value="#3B3B5E"/>
+                                <Setter Property="Stroke" Value="#8B5CF6"/>
+                            </DataTrigger>
+                        </Border.Triggers>
                         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"
                                    Text="{Binding IngredientName}"
@@ -64,12 +65,17 @@
                                    FontSize="14"
                                    TextColor="{Binding PriceChangePercent, Converter={StaticResource PriceChangeToColorConverter}}"/>
                             
-                            <Label Grid.Row="2" Grid.ColumnSpan="2"
-                                   Text="{Binding AvailableQuantity, StringFormat='Available: {0}'}"
-                                   FontSize="12"
-                                   TextColor="#9CA3AF"/>
+                            <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="15">
+                                <Label Text="{Binding AvailableQuantity, StringFormat='Available: {0}'}"
+                                       FontSize="12"
+                                       TextColor="#9CA3AF"/>
+                                <Label Text="{Binding PlayerQuantity, StringFormat='You own: {0}'}"
+                                       FontSize="12"
+                                       TextColor="#10B981"
+                                       FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
                         </Grid>
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
@@ -83,7 +89,7 @@
                     TextColor="White"
                     HeightRequest="50"
                     FontSize="18"
-                    IsEnabled="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}"/>
+                    IsEnabled="{Binding CanBuy}"/>
             <Button Grid.Column="1"
                     Text="Sell"
                     Command="{Binding SellItemCommand}"
@@ -91,7 +97,7 @@
                     TextColor="White"
                     HeightRequest="50"
                     FontSize="18"
-                    IsEnabled="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}"/>
+                    IsEnabled="{Binding CanSell}"/>
         </Grid>
     </Grid>
 
