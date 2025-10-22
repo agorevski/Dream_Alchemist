@@ -12,61 +12,138 @@
         <!-- Header -->
         <Frame Grid.Row="0" BackgroundColor="#1A1A2E" Padding="15" Margin="0,0,0,10">
             <VerticalStackLayout Spacing="10">
-                <Label Text="🗺️ Travel Between Cities"
-                       FontSize="20"
-                       FontAttributes="Bold"
-                       TextColor="White"/>
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="🗺️ Travel"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="{Binding PlayerTierName, StringFormat='• {0}'}"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#8B5CF6"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
                 <Label Text="{Binding CurrentCityName, StringFormat='Current: {0}'}"
                        FontSize="14"
                        TextColor="#06B6D4"/>
-                <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
-                       FontSize="14"
-                       TextColor="#FCD34D"/>
+                <HorizontalStackLayout Spacing="15">
+                    <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
+                           FontSize="14"
+                           TextColor="#FCD34D"/>
+                    <Label Text="{Binding TotalReputation, StringFormat='⭐ {0} total rep'}"
+                           FontSize="14"
+                           TextColor="#A78BFA"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="15">
+                    <Label Text="{Binding TrustReputation, StringFormat='Trust: {0}'}"
+                           FontSize="12"
+                           TextColor="#10B981"/>
+                    <Label Text="{Binding InfamyReputation, StringFormat='Infamy: {0}'}"
+                           FontSize="12"
+                           TextColor="#EF4444"/>
+                    <Label Text="{Binding LucidityReputation, StringFormat='Lucidity: {0}'}"
+                           FontSize="12"
+                           TextColor="#8B5CF6"/>
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </Frame>
 
         <!-- Cities List -->
-        <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Cities}"
-                        SelectedItem="{Binding SelectedCity}"
-                        SelectionMode="Single">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="vm:CityViewModel">
-                    <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
-                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="{Binding City.Name}"
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   TextColor="White"/>
-                            <Label Grid.Row="0" Grid.Column="1"
-                                   Text="Current"
-                                   FontSize="12"
-                                   TextColor="#10B981"
-                                   IsVisible="{Binding IsCurrentCity}"/>
-                            
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="{Binding City.Description}"
-                                   FontSize="12"
-                                   TextColor="#9CA3AF"/>
-                            
-                            <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="15">
-                                <Label Text="{Binding TravelCost, StringFormat='💰 {0} coins'}"
-                                       FontSize="12"
-                                       TextColor="#FCD34D"/>
-                                <Label Text="{Binding TravelDays, StringFormat='⏰ {0} days'}"
-                                       FontSize="12"
-                                       TextColor="#06B6D4"/>
-                                <Label Text="🔒 Locked"
-                                       FontSize="12"
-                                       TextColor="#EF4444"
-                                       IsVisible="{Binding IsUnlocked, Converter={StaticResource InvertedBoolConverter}}"/>
-                            </HorizontalStackLayout>
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="10">
+                <CollectionView ItemsSource="{Binding Cities}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CityViewModel">
+                            <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TravelViewModel}}, Path=SelectCityCommand}"
+                                                          CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding City.Name}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           TextColor="White"/>
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                           Text="📍 Current"
+                                           FontSize="12"
+                                           TextColor="#10B981"
+                                           IsVisible="{Binding IsCurrentCity}"/>
+                                    
+                                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                           Text="{Binding City.Description}"
+                                           FontSize="12"
+                                           TextColor="#9CA3AF"
+                                           Margin="0,5,0,5"/>
+                                    
+                                    <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="15" Margin="0,0,0,10">
+                                        <Label Text="{Binding TravelCost, StringFormat='💰 {0} coins'}"
+                                               FontSize="12"
+                                               TextColor="#FCD34D"/>
+                                        <Label Text="{Binding TravelDays, StringFormat='⏰ {0} days'}"
+                                               FontSize="12"
+                                               TextColor="#06B6D4"/>
+                                        <Label Text="{Binding RequiredReputation, StringFormat='⭐ {0} rep required'}"
+                                               FontSize="12"
+                                               TextColor="#A78BFA"
+                                               IsVisible="{Binding IsUnlocked, Converter={StaticResource InvertedBoolConverter}}"/>
+                                    </HorizontalStackLayout>
+                                    
+                                    <Button Grid.Row="3" Grid.ColumnSpan="2"
+                                            Text="🚀 Travel Here"
+                                            BackgroundColor="#10B981"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TravelViewModel}}, Path=SelectCityCommand}"
+                                            CommandParameter="{Binding .}"
+                                            IsVisible="{Binding CanTravel}"/>
+                                    
+                                    <Label Grid.Row="3" Grid.ColumnSpan="2"
+                                           Text="🔒 Locked - Tap for details"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="#EF4444"
+                                           HorizontalOptions="Center"
+                                           Padding="10"
+                                           IsVisible="{Binding CanTravel, Converter={StaticResource InvertedBoolConverter}}"/>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <!-- Status Message Display -->
+                <Frame BackgroundColor="#1A1A2E" 
+                       Padding="15" 
+                       Margin="0,10,0,0"
+                       IsVisible="{Binding TravelConfirmationMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
+                    <Label Text="{Binding TravelConfirmationMessage}"
+                           FontSize="14"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                </Frame>
+                
+                <!-- Confirmation Buttons -->
+                <HorizontalStackLayout Spacing="10" 
+                                       HorizontalOptions="Center"
+                                       IsVisible="{Binding ShowTravelConfirmation}">
+                    <Button Text="✅ Confirm Travel"
+                            BackgroundColor="#10B981"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            Command="{Binding ConfirmTravelCommand}"
+                            WidthRequest="150"/>
+                    <Button Text="❌ Cancel"
+                            BackgroundColor="#EF4444"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            Command="{Binding CancelTravelCommand}"
+                            WidthRequest="150"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 
 </ContentPage>

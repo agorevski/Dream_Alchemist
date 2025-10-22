@@ -26,6 +26,21 @@ public partial class TravelViewModel : BaseViewModel
     private int playerCoins;
 
     [ObservableProperty]
+    private int trustReputation;
+
+    [ObservableProperty]
+    private int infamyReputation;
+
+    [ObservableProperty]
+    private int lucidityReputation;
+
+    [ObservableProperty]
+    private int totalReputation;
+
+    [ObservableProperty]
+    private string playerTierName = string.Empty;
+
+    [ObservableProperty]
     private bool showTravelConfirmation;
 
     [ObservableProperty]
@@ -55,8 +70,15 @@ public partial class TravelViewModel : BaseViewModel
         await ExecuteAsync(async () =>
         {
             var currentCity = _gameStateService.CurrentCity;
+            var playerState = _gameStateService.PlayerState;
+            
             CurrentCityName = currentCity.Name;
-            PlayerCoins = _gameStateService.PlayerState.Coins;
+            PlayerCoins = playerState.Coins;
+            PlayerTierName = Helpers.GameConstants.TierNames[playerState.Tier];
+            TrustReputation = playerState.TrustReputation;
+            InfamyReputation = playerState.InfamyReputation;
+            LucidityReputation = playerState.LucidityReputation;
+            TotalReputation = playerState.TrustReputation + playerState.InfamyReputation + playerState.LucidityReputation;
 
             var allCities = await _travelService.GetAllCitiesAsync();
             
@@ -89,20 +111,40 @@ public partial class TravelViewModel : BaseViewModel
         if (cityViewModel.IsCurrentCity)
         {
             TravelConfirmationMessage = "You are already in this city.";
-        }
-        else if (!cityViewModel.IsUnlocked)
-        {
-            TravelConfirmationMessage = $"Requires {cityViewModel.RequiredReputation} reputation to unlock.";
+            ShowTravelConfirmation = false;
         }
         else if (!cityViewModel.CanTravel)
         {
-            TravelConfirmationMessage = $"Insufficient coins. Need {cityViewModel.TravelCost} coins.";
+            var playerState = _gameStateService.PlayerState;
+            var totalReputation = playerState.TrustReputation + 
+                                playerState.InfamyReputation + 
+                                playerState.LucidityReputation;
+            
+            // Check what's blocking travel
+            if (totalReputation < cityViewModel.RequiredReputation)
+            {
+                var needed = cityViewModel.RequiredReputation - totalReputation;
+                TravelConfirmationMessage = $"🔒 Locked: Requires {cityViewModel.RequiredReputation} total reputation.\n" +
+                    $"Current: {totalReputation} (need {needed} more)";
+            }
+            else if (playerState.Coins < cityViewModel.TravelCost)
+            {
+                var needed = cityViewModel.TravelCost - playerState.Coins;
+                TravelConfirmationMessage = $"💰 Insufficient funds: Need {cityViewModel.TravelCost} coins.\n" +
+                    $"Current: {playerState.Coins} (need {needed} more)";
+            }
+            else
+            {
+                TravelConfirmationMessage = "Cannot travel to this city.";
+            }
+            ShowTravelConfirmation = false;
         }
         else
         {
-            TravelConfirmationMessage = $"Travel to {cityViewModel.City.Name}?\n" +
-                $"Cost: {cityViewModel.TravelCost} coins\n" +
-                $"Time: {cityViewModel.TravelDays} days";
+            var unlockMessage = !cityViewModel.IsUnlocked ? "\n✨ This will unlock a new city!" : "";
+            TravelConfirmationMessage = $"Travel to {cityViewModel.City.Name}?{unlockMessage}\n" +
+                $"💰 Cost: {cityViewModel.TravelCost} coins\n" +
+                $"⏰ Time: {cityViewModel.TravelDays} days";
             ShowTravelConfirmation = true;
         }
 

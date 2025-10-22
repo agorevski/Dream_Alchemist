@@ -48,17 +48,13 @@ public class TravelService : ITravelService
         if (playerState.CurrentCityId == cityId)
             return false;
 
-        // Check if city is unlocked
-        if (!playerState.UnlockedCities.Contains(cityId))
-        {
-            // Check reputation requirement
-            var totalReputation = playerState.TrustReputation + 
-                                playerState.InfamyReputation + 
-                                playerState.LucidityReputation;
-            
-            if (totalReputation < city.RequiredReputation)
-                return false;
-        }
+        // Check reputation requirement (for both locked and unlocked cities)
+        var totalReputation = playerState.TrustReputation + 
+                            playerState.InfamyReputation + 
+                            playerState.LucidityReputation;
+        
+        if (totalReputation < city.RequiredReputation)
+            return false;
 
         // Check if player can afford travel
         if (playerState.Coins < city.TravelCost)
