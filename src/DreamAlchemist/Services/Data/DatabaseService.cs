@@ -24,6 +24,22 @@ public class DatabaseService : IDatabaseService
         if (_initialized)
             return;
 
+        // TEMPORARY FIX: Force database reset to fix deserialization issues
+        // Remove this after confirming the fix works
+        try
+        {
+            await _database.DropTableAsync<Ingredient>();
+            await _database.DropTableAsync<Recipe>();
+            await _database.DropTableAsync<City>();
+            await _database.DropTableAsync<GameEvent>();
+            await _database.DropTableAsync<PlayerState>();
+            System.Diagnostics.Debug.WriteLine("Database tables dropped for reset");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error dropping tables (may not exist): {ex.Message}");
+        }
+
         await _database.CreateTableAsync<Ingredient>();
         await _database.CreateTableAsync<Recipe>();
         await _database.CreateTableAsync<City>();
@@ -54,16 +70,33 @@ public class DatabaseService : IDatabaseService
         try
         {
             var json = await LoadEmbeddedResourceAsync("ingredients.json");
+            System.Diagnostics.Debug.WriteLine($"Loaded ingredients JSON, length: {json?.Length ?? 0}");
+            
             var ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
+            System.Diagnostics.Debug.WriteLine($"Deserialized {ingredients?.Count ?? 0} ingredients");
             
             if (ingredients != null && ingredients.Count > 0)
             {
+                // Log first ingredient to verify deserialization
+                var first = ingredients[0];
+                System.Diagnostics.Debug.WriteLine($"First ingredient: {first.Name}, Tags count: {first.Tags?.Count ?? 0}");
+                if (first.Tags != null && first.Tags.Count > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"First tag: {first.Tags[0]}");
+                }
+                
                 await _database.InsertAllAsync(ingredients);
+                System.Diagnostics.Debug.WriteLine($"Successfully inserted {ingredients.Count} ingredients into database");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("No ingredients to seed - list is null or empty");
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error seeding ingredients: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
         }
     }
 

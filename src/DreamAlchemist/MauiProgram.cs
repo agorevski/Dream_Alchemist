@@ -44,6 +44,7 @@ public static class MauiProgram
         builder.Services.AddTransient<Views.LabPage>();
         builder.Services.AddTransient<Views.InventoryPage>();
         builder.Services.AddTransient<Views.TravelPage>();
+        builder.Services.AddTransient<Views.DiagnosticPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

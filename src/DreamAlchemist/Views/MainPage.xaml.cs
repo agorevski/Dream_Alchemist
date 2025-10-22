@@ -9,8 +9,13 @@ public partial class MainPage : ContentPage
     public MainPage(MainViewModel viewModel)
     {
         InitializeComponent();
+        BindingContext = viewModel;
         _viewModel = viewModel;
-        BindingContext = _viewModel;
+    }
+
+    private async void OnDiagnosticsClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("DiagnosticPage");
     }
 
     protected override async void OnAppearing()

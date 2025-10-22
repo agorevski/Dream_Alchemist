@@ -64,12 +64,17 @@ public partial class MarketViewModel : BaseViewModel
             CurrentCityName = currentCity.Name;
             PlayerCoins = _gameStateService.PlayerState.Coins;
             
+            System.Diagnostics.Debug.WriteLine($"Loading market data for city: {currentCity.Name} (ID: {currentCity.Id})");
+            
             var prices = await _marketService.GetCurrentPricesAsync(currentCity.Id);
+            
+            System.Diagnostics.Debug.WriteLine($"Got {prices?.Count ?? 0} prices from market service");
             
             // Apply filters
             if (ShowTrendingOnly)
             {
                 prices = prices.Where(p => p.IsTrending).ToList();
+                System.Diagnostics.Debug.WriteLine($"After trending filter: {prices.Count} items");
             }
             
             if (!string.IsNullOrWhiteSpace(FilterText))
@@ -77,13 +82,17 @@ public partial class MarketViewModel : BaseViewModel
                 prices = prices.Where(p => 
                     p.IngredientName.Contains(FilterText, StringComparison.OrdinalIgnoreCase))
                     .ToList();
+                System.Diagnostics.Debug.WriteLine($"After text filter: {prices.Count} items");
             }
             
             MarketItems.Clear();
             foreach (var price in prices)
             {
                 MarketItems.Add(price);
+                System.Diagnostics.Debug.WriteLine($"Added market item: {price.IngredientName} - {price.CurrentPrice} coins");
             }
+            
+            System.Diagnostics.Debug.WriteLine($"Final MarketItems count: {MarketItems.Count}");
         });
     }
 

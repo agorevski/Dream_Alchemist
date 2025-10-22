@@ -31,7 +31,7 @@
                         SelectedItem="{Binding SelectedCity}"
                         SelectionMode="Single">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="vm:CityViewModel">
                     <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
                         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"

@@ -34,8 +34,13 @@ public class MarketService : IMarketService
 
     public async Task<List<MarketPriceDto>> GetCurrentPricesAsync(string cityId)
     {
+        System.Diagnostics.Debug.WriteLine($"MarketService: GetCurrentPricesAsync called for city: {cityId}");
+        
         var ingredients = await _databaseService.GetIngredientsAsync();
+        System.Diagnostics.Debug.WriteLine($"MarketService: Retrieved {ingredients?.Count ?? 0} ingredients from database");
+        
         var city = await _databaseService.GetCityAsync(cityId);
+        System.Diagnostics.Debug.WriteLine($"MarketService: Retrieved city: {city?.Name ?? "NULL"}");
         
         if (city == null)
             throw new ArgumentException("City not found", nameof(cityId));
@@ -65,6 +70,7 @@ public class MarketService : IMarketService
             });
         }
 
+        System.Diagnostics.Debug.WriteLine($"MarketService: Created {prices.Count} price DTOs");
         return prices.OrderBy(p => p.Rarity).ThenBy(p => p.IngredientName).ToList();
     }
 

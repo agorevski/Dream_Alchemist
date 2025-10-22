@@ -55,7 +55,38 @@ public class Recipe
     public string TagsJson
     {
         get => JsonConvert.SerializeObject(Tags);
-        set => Tags = JsonConvert.DeserializeObject<List<DreamTag>>(value) ?? new();
+        set
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    Tags = new();
+                    return;
+                }
+
+                // Try to deserialize as integer array first (most common case)
+                var intArray = JsonConvert.DeserializeObject<List<int>>(value);
+                if (intArray != null)
+                {
+                    Tags = intArray.Select(i => (DreamTag)i).ToList();
+                    return;
+                }
+            }
+            catch
+            {
+                // If that fails, try deserializing directly as enum array
+                try
+                {
+                    Tags = JsonConvert.DeserializeObject<List<DreamTag>>(value) ?? new();
+                }
+                catch
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to deserialize TagsJson: {value}");
+                    Tags = new();
+                }
+            }
+        }
     }
 
     /// <summary>

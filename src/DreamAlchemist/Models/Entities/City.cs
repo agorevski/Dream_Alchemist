@@ -35,7 +35,45 @@ public class City
     public string TagModifiersJson
     {
         get => JsonConvert.SerializeObject(TagModifiers);
-        set => TagModifiers = JsonConvert.DeserializeObject<Dictionary<DreamTag, decimal>>(value) ?? new();
+        set
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    TagModifiers = new();
+                    return;
+                }
+
+                // Try to deserialize as Dictionary<string, decimal> first (JSON uses string keys)
+                var stringDict = JsonConvert.DeserializeObject<Dictionary<string, decimal>>(value);
+                if (stringDict != null)
+                {
+                    TagModifiers = new Dictionary<DreamTag, decimal>();
+                    foreach (var kvp in stringDict)
+                    {
+                        if (int.TryParse(kvp.Key, out int tagValue))
+                        {
+                            TagModifiers[(DreamTag)tagValue] = kvp.Value;
+                        }
+                    }
+                    return;
+                }
+            }
+            catch
+            {
+                // If that fails, try deserializing directly as enum dictionary
+                try
+                {
+                    TagModifiers = JsonConvert.DeserializeObject<Dictionary<DreamTag, decimal>>(value) ?? new();
+                }
+                catch
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to deserialize TagModifiersJson: {value}");
+                    TagModifiers = new();
+                }
+            }
+        }
     }
 
     /// <summary>

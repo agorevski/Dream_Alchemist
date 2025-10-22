@@ -57,7 +57,7 @@
                         SelectedItem="{Binding SelectedItem}"
                         SelectionMode="Single">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="vm:InventoryItemViewModel">
                     <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
                         <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
                             <Label Grid.Row="0" Grid.Column="0"
