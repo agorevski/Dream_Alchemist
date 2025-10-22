@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DreamAlchemist.ViewModels"
+             x:Class="DreamAlchemist.Views.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Player Info Card -->
+            <Frame BackgroundColor="#1A1A2E" CornerRadius="15" Padding="20">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding PlayerName}" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    
+                    <HorizontalStackLayout Spacing="20">
+                        <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
+                               FontSize="18"
+                               TextColor="#FCD34D"/>
+                        <Label Text="{Binding CurrentDay, StringFormat='📅 Day {0}'}"
+                               FontSize="18"
+                               TextColor="#06B6D4"/>
+                    </HorizontalStackLayout>
+                    
+                    <Label Text="{Binding CurrentCityName, StringFormat='📍 {0}'}"
+                           FontSize="16"
+                           TextColor="#9CA3AF"/>
+                    
+                    <Label Text="{Binding PlayerTierName}"
+                           FontSize="14"
+                           TextColor="#8B5CF6"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Quick Stats -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <Frame Grid.Column="0" BackgroundColor="#25253E" Padding="15">
+                    <VerticalStackLayout>
+                        <Label Text="Trust"
+                               FontSize="12"
+                               TextColor="#9CA3AF"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding TrustReputation}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#10B981"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <Frame Grid.Column="1" BackgroundColor="#25253E" Padding="15">
+                    <VerticalStackLayout>
+                        <Label Text="Infamy"
+                               FontSize="12"
+                               TextColor="#9CA3AF"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding InfamyReputation}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#EF4444"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+                
+                <Frame Grid.Column="2" BackgroundColor="#25253E" Padding="15">
+                    <VerticalStackLayout>
+                        <Label Text="Lucidity"
+                               FontSize="12"
+                               TextColor="#9CA3AF"
+                               HorizontalOptions="Center"/>
+                        <Label Text="{Binding LucidityReputation}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#8B5CF6"
+                               HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- Quick Status -->
+            <Frame BackgroundColor="#25253E" Padding="15">
+                <Label Text="{Binding QuickStatus}"
+                       FontSize="14"
+                       TextColor="White"
+                       HorizontalOptions="Center"/>
+            </Frame>
+
+            <!-- Navigation Buttons -->
+            <VerticalStackLayout Spacing="15">
+                <Button Text="🏪 Dream Market"
+                        Command="{Binding NavigateToMarketCommand}"
+                        BackgroundColor="#8B5CF6"
+                        TextColor="White"
+                        HeightRequest="60"
+                        FontSize="18"
+                        CornerRadius="10"/>
+                
+                <Button Text="🧪 Synthesis Lab"
+                        Command="{Binding NavigateToLabCommand}"
+                        BackgroundColor="#EC4899"
+                        TextColor="White"
+                        HeightRequest="60"
+                        FontSize="18"
+                        CornerRadius="10"/>
+                
+                <Button Text="🎒 Inventory"
+                        Command="{Binding NavigateToInventoryCommand}"
+                        BackgroundColor="#06B6D4"
+                        TextColor="White"
+                        HeightRequest="60"
+                        FontSize="18"
+                        CornerRadius="10"/>
+                
+                <Button Text="🗺️ Travel"
+                        Command="{Binding NavigateToTravelCommand}"
+                        BackgroundColor="#F59E0B"
+                        TextColor="White"
+                        HeightRequest="60"
+                        FontSize="18"
+                        CornerRadius="10"/>
+            </VerticalStackLayout>
+
+            <!-- Progress Day Button -->
+            <Button Text="⏰ Sleep (Progress 1 Day)"
+                    Command="{Binding ProgressDayCommand}"
+                    BackgroundColor="#374151"
+                    TextColor="White"
+                    HeightRequest="50"
+                    FontSize="16"
+                    CornerRadius="10"
+                    Margin="0,10,0,0"/>
+
+            <!-- Error Message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="#EF4444"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
+                   HorizontalOptions="Center"/>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                              IsVisible="{Binding IsBusy}"
+                              Color="#8B5CF6"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

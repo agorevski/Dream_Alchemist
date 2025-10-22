@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DreamAlchemist"
+             xmlns:converters="clr-namespace:DreamAlchemist.Helpers.Converters"
+             x:Class="DreamAlchemist.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Value Converters -->
+            <converters:StringIsNotNullOrEmptyConverter x:Key="StringIsNotNullOrEmptyConverter" />
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:PriceChangeToColorConverter x:Key="PriceChangeToColorConverter" />
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+            
+            <!-- Dream Alchemist Color Palette -->
+            <Color x:Key="DreamPurple">#8B5CF6</Color>
+            <Color x:Key="DreamPink">#EC4899</Color>
+            <Color x:Key="DreamCyan">#06B6D4</Color>
+            <Color x:Key="DreamYellow">#FCD34D</Color>
+            <Color x:Key="DarkBackground">#0F0F1E</Color>
+            <Color x:Key="DarkSurface">#1A1A2E</Color>
+            <Color x:Key="DarkCard">#25253E</Color>
+            
+            <!-- Gradients -->
+            <LinearGradientBrush x:Key="DreamGradient" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{StaticResource DreamPurple}" Offset="0.0" />
+                <GradientStop Color="{StaticResource DreamPink}" Offset="1.0" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

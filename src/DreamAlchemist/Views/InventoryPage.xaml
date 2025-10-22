@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DreamAlchemist.ViewModels"
+             x:Class="DreamAlchemist.Views.InventoryPage"
+             x:DataType="vm:InventoryViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F0F1E">
+
+    <Grid RowDefinitions="Auto,Auto,*" Padding="10">
+        
+        <!-- Header -->
+        <Frame Grid.Row="0" BackgroundColor="#1A1A2E" Padding="15" Margin="0,0,0,10">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="🎒 Inventory"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="White"/>
+                <Label Text="{Binding CapacityText, StringFormat='Weight: {0}'}"
+                       FontSize="14"
+                       TextColor="#9CA3AF"/>
+                <ProgressBar Progress="{Binding CapacityPercentage}"
+                             ProgressColor="#8B5CF6"
+                             HeightRequest="10"/>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Sort Buttons -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Name"
+                        Command="{Binding SortByNameCommand}"
+                        BackgroundColor="#374151"
+                        TextColor="White"
+                        HeightRequest="35"/>
+                <Button Text="Rarity"
+                        Command="{Binding SortByRarityCommand}"
+                        BackgroundColor="#374151"
+                        TextColor="White"
+                        HeightRequest="35"/>
+                <Button Text="Quantity"
+                        Command="{Binding SortByQuantityCommand}"
+                        BackgroundColor="#374151"
+                        TextColor="White"
+                        HeightRequest="35"/>
+                <Button Text="Value"
+                        Command="{Binding SortByValueCommand}"
+                        BackgroundColor="#374151"
+                        TextColor="White"
+                        HeightRequest="35"/>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Inventory Items -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding InventoryItems}"
+                        SelectedItem="{Binding SelectedItem}"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
+                        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Ingredient.Name}"
+                                   FontSize="16"
+                                   TextColor="White"/>
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding Quantity, StringFormat='x{0}'}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#FCD34D"/>
+                            
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding Ingredient.Rarity}"
+                                   FontSize="12"
+                                   TextColor="#8B5CF6"/>
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding TotalValue, StringFormat='{0:N0} coins'}"
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

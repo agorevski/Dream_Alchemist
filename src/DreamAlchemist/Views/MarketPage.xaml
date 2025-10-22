@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DreamAlchemist.ViewModels"
+             x:Class="DreamAlchemist.Views.MarketPage"
+             x:DataType="vm:MarketViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0F0F1E">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="10">
+        
+        <!-- Header -->
+        <Frame Grid.Row="0" BackgroundColor="#1A1A2E" Padding="15" Margin="0,0,0,10">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="{Binding CurrentCityName, StringFormat='Market in {0}'}"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="White"/>
+                <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
+                       FontSize="16"
+                       TextColor="#FCD34D"/>
+                       
+                <HorizontalStackLayout Spacing="10">
+                    <Button Text="🔄 Refresh"
+                            Command="{Binding RefreshMarketCommand}"
+                            BackgroundColor="#374151"
+                            TextColor="White"
+                            HeightRequest="40"/>
+                    <Button Text="⭐ Trending"
+                            Command="{Binding ToggleTrendingFilterCommand}"
+                            BackgroundColor="{Binding ShowTrendingOnly, Converter={StaticResource BoolToColorConverter}}"
+                            TextColor="White"
+                            HeightRequest="40"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Market Items List -->
+        <CollectionView Grid.Row="1" 
+                        ItemsSource="{Binding MarketItems}"
+                        SelectedItem="{Binding SelectedItem}"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding IngredientName}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="{Binding Rarity}"
+                                   FontSize="12"
+                                   TextColor="#8B5CF6"/>
+                            
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding CurrentPrice, StringFormat='💰 {0:N0} coins'}"
+                                   FontSize="16"
+                                   TextColor="#FCD34D"/>
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding PriceChangePercent, StringFormat='{0:+0.0;-0.0}%'}"
+                                   FontSize="14"
+                                   TextColor="{Binding PriceChangePercent, Converter={StaticResource PriceChangeToColorConverter}}"/>
+                            
+                            <Label Grid.Row="2" Grid.ColumnSpan="2"
+                                   Text="{Binding AvailableQuantity, StringFormat='Available: {0}'}"
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Action Buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="10" Padding="0,10,0,0">
+            <Button Grid.Column="0"
+                    Text="Buy"
+                    Command="{Binding BuyItemCommand}"
+                    BackgroundColor="#10B981"
+                    TextColor="White"
+                    HeightRequest="50"
+                    FontSize="18"
+                    IsEnabled="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}"/>
+            <Button Grid.Column="1"
+                    Text="Sell"
+                    Command="{Binding SellItemCommand}"
+                    BackgroundColor="#EF4444"
+                    TextColor="White"
+                    HeightRequest="50"
+                    FontSize="18"
+                    IsEnabled="{Binding SelectedItem, Converter={StaticResource IsNotNullConverter}}"/>
+        </Grid>
+    </Grid>
+
+</ContentPage>

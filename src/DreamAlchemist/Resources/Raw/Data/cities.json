@@ -1,0 +1,67 @@
+[
+  {
+    "Id": "somnia_terminal",
+    "Name": "Somnia Terminal",
+    "Description": "The starting hub where all dreamers converge",
+    "ThemeColor": "#8B5CF6",
+    "MusicTrackId": "ambient_terminal",
+    "TagModifiersJson": "{\"0\":1.2,\"4\":1.1,\"3\":0.9}",
+    "EventPoolJson": "[\"market_surge\",\"dream_police_raid\"]",
+    "TravelCost": 0,
+    "TravelDays": 0,
+    "RequiredReputation": 0,
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "neuro_harbor",
+    "Name": "Neuro Harbor",
+    "Description": "A coastal city where memories wash ashore",
+    "ThemeColor": "#06B6D4",
+    "MusicTrackId": "ambient_harbor",
+    "TagModifiersJson": "{\"0\":1.5,\"8\":1.3,\"12\":1.2}",
+    "EventPoolJson": "[\"lucidity_surge\",\"memory_flood\"]",
+    "TravelCost": 1000,
+    "TravelDays": 2,
+    "RequiredReputation": 10,
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "oblivion_alley",
+    "Name": "Oblivion Alley",
+    "Description": "Dark streets where nightmares trade freely",
+    "ThemeColor": "#DC2626",
+    "MusicTrackId": "ambient_dark",
+    "TagModifiersJson": "{\"1\":1.8,\"16\":2.0,\"10\":1.4}",
+    "EventPoolJson": "[\"dream_storm\",\"raid_warning\",\"dark_market\"]",
+    "TravelCost": 1500,
+    "TravelDays": 3,
+    "RequiredReputation": 25,
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "lucid_gardens",
+    "Name": "Lucid Gardens",
+    "Description": "Pristine realm of conscious dreaming",
+    "ThemeColor": "#10B981",
+    "MusicTrackId": "ambient_garden",
+    "TagModifiersJson": "{\"15\":1.6,\"11\":1.4,\"9\":1.3,\"12\":1.2}",
+    "EventPoolJson": "[\"enlightenment_wave\",\"meditation_event\"]",
+    "TravelCost": 2000,
+    "TravelDays": 3,
+    "RequiredReputation": 40,
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  },
+  {
+    "Id": "neon_mind_bazaar",
+    "Name": "Neon Mind Bazaar",
+    "Description": "Chaotic marketplace of the urban unconscious",
+    "ThemeColor": "#EC4899",
+    "MusicTrackId": "ambient_neon",
+    "TagModifiersJson": "{\"13\":1.5,\"10\":1.3,\"14\":1.4}",
+    "EventPoolJson": "[\"chaos_festival\",\"urban_rush\",\"neon_boom\"]",
+    "TravelCost": 2500,
+    "TravelDays": 4,
+    "RequiredReputation": 60,
+    "CreatedAt": "2025-01-01T00:00:00Z"
+  }
+]
