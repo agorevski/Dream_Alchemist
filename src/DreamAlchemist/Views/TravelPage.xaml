@@ -5,45 +5,45 @@
              x:Class="DreamAlchemist.Views.TravelPage"
              x:DataType="vm:TravelViewModel"
              Title="{Binding Title}"
-             BackgroundColor="#0F0F1E">
+             BackgroundColor="{DynamicResource ThemeBackgroundPrimary}">
 
     <Grid RowDefinitions="Auto,*" Padding="10">
         
         <!-- Header -->
-        <Frame Grid.Row="0" BackgroundColor="#1A1A2E" Padding="15" Margin="0,0,0,10">
+        <Frame Grid.Row="0" BackgroundColor="{DynamicResource ThemeBackgroundSecondary}" Padding="15" Margin="0,0,0,10" BorderColor="{DynamicResource ThemeAccent3}">
             <VerticalStackLayout Spacing="10">
                 <HorizontalStackLayout Spacing="10">
                     <Label Text="🗺️ Travel"
                            FontSize="20"
                            FontAttributes="Bold"
-                           TextColor="White"/>
+                           TextColor="{DynamicResource ThemeTextPrimary}"/>
                     <Label Text="{Binding PlayerTierName, StringFormat='• {0}'}"
                            FontSize="16"
                            FontAttributes="Bold"
-                           TextColor="#8B5CF6"
+                           TextColor="{DynamicResource ThemePrimary}"
                            VerticalOptions="Center"/>
                 </HorizontalStackLayout>
                 <Label Text="{Binding CurrentCityName, StringFormat='Current: {0}'}"
                        FontSize="14"
-                       TextColor="#06B6D4"/>
+                       TextColor="{DynamicResource ThemeSecondary}"/>
                 <HorizontalStackLayout Spacing="15">
                     <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
                            FontSize="14"
-                           TextColor="#FCD34D"/>
+                           TextColor="{DynamicResource ThemeAccent3}"/>
                     <Label Text="{Binding TotalReputation, StringFormat='⭐ {0} total rep'}"
                            FontSize="14"
-                           TextColor="#A78BFA"/>
+                           TextColor="{DynamicResource ThemePrimaryLight}"/>
                 </HorizontalStackLayout>
                 <HorizontalStackLayout Spacing="15">
                     <Label Text="{Binding TrustReputation, StringFormat='Trust: {0}'}"
                            FontSize="12"
-                           TextColor="#10B981"/>
+                           TextColor="{DynamicResource ThemeSuccess}"/>
                     <Label Text="{Binding InfamyReputation, StringFormat='Infamy: {0}'}"
                            FontSize="12"
-                           TextColor="#EF4444"/>
+                           TextColor="{DynamicResource ThemeDanger}"/>
                     <Label Text="{Binding LucidityReputation, StringFormat='Lucidity: {0}'}"
                            FontSize="12"
-                           TextColor="#8B5CF6"/>
+                           TextColor="{DynamicResource ThemePrimary}"/>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </Frame>
@@ -55,7 +55,7 @@
                                 SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="vm:CityViewModel">
-                            <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
+                            <Frame BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" Padding="15" Margin="0,5">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TravelViewModel}}, Path=SelectCityCommand}"
                                                           CommandParameter="{Binding .}"/>
@@ -65,37 +65,37 @@
                                            Text="{Binding City.Name}"
                                            FontSize="18"
                                            FontAttributes="Bold"
-                                           TextColor="White"/>
+                                           TextColor="{DynamicResource ThemeTextPrimary}"/>
                                     <Label Grid.Row="0" Grid.Column="1"
                                            Text="📍 Current"
                                            FontSize="12"
-                                           TextColor="#10B981"
+                                           TextColor="{DynamicResource ThemeSuccess}"
                                            IsVisible="{Binding IsCurrentCity}"/>
                                     
                                     <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                            Text="{Binding City.Description}"
                                            FontSize="12"
-                                           TextColor="#9CA3AF"
+                                           TextColor="{DynamicResource ThemeTextSecondary}"
                                            Margin="0,5,0,5"/>
                                     
                                     <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="15" Margin="0,0,0,10">
                                         <Label Text="{Binding TravelCost, StringFormat='💰 {0} coins'}"
                                                FontSize="12"
-                                               TextColor="#FCD34D"/>
+                                               TextColor="{DynamicResource ThemeAccent3}"/>
                                         <Label Text="{Binding TravelDays, StringFormat='⏰ {0} days'}"
                                                FontSize="12"
-                                               TextColor="#06B6D4"/>
+                                               TextColor="{DynamicResource ThemeSecondary}"/>
                                         <Label Text="{Binding RequiredReputation, StringFormat='⭐ {0} rep required'}"
                                                FontSize="12"
-                                               TextColor="#A78BFA"
+                                               TextColor="{DynamicResource ThemePrimaryLight}"
                                                IsVisible="{Binding IsUnlocked, Converter={StaticResource InvertedBoolConverter}}"/>
                                     </HorizontalStackLayout>
                                     
                                     <!-- Show Travel button if can travel AND not current city -->
                                     <Button Grid.Row="3" Grid.ColumnSpan="2"
                                             Text="🚀 Travel Here"
-                                            BackgroundColor="#10B981"
-                                            TextColor="White"
+                                            BackgroundColor="{DynamicResource ThemeSuccess}"
+                                            TextColor="{DynamicResource ThemeTextPrimary}"
                                             FontAttributes="Bold"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TravelViewModel}}, Path=SelectCityCommand}"
                                             CommandParameter="{Binding .}">
@@ -130,7 +130,7 @@
                                         <Label Text="🔒 Locked - Tap for details"
                                                FontSize="14"
                                                FontAttributes="Bold"
-                                               TextColor="#EF4444"
+                                               TextColor="{DynamicResource ThemeDanger}"
                                                HorizontalOptions="Center"
                                                Padding="10"
                                                InputTransparent="True"/>
@@ -142,13 +142,13 @@
                 </CollectionView>
                 
                 <!-- Status Message Display -->
-                <Frame BackgroundColor="#1A1A2E" 
+                <Frame BackgroundColor="{DynamicResource ThemeBackgroundSecondary}" 
                        Padding="15" 
                        Margin="0,10,0,0"
                        IsVisible="{Binding TravelConfirmationMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}">
                     <Label Text="{Binding TravelConfirmationMessage}"
                            FontSize="14"
-                           TextColor="White"
+                           TextColor="{DynamicResource ThemeTextPrimary}"
                            HorizontalTextAlignment="Center"/>
                 </Frame>
                 
@@ -157,14 +157,14 @@
                                        HorizontalOptions="Center"
                                        IsVisible="{Binding ShowTravelConfirmation}">
                     <Button Text="✅ Confirm Travel"
-                            BackgroundColor="#10B981"
-                            TextColor="White"
+                            BackgroundColor="{DynamicResource ThemeSuccess}"
+                            TextColor="{DynamicResource ThemeTextPrimary}"
                             FontAttributes="Bold"
                             Command="{Binding ConfirmTravelCommand}"
                             WidthRequest="150"/>
                     <Button Text="❌ Cancel"
-                            BackgroundColor="#EF4444"
-                            TextColor="White"
+                            BackgroundColor="{DynamicResource ThemeDanger}"
+                            TextColor="{DynamicResource ThemeTextPrimary}"
                             FontAttributes="Bold"
                             Command="{Binding CancelTravelCommand}"
                             WidthRequest="150"/>

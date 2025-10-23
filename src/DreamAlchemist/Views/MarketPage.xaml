@@ -6,20 +6,20 @@
              x:Class="DreamAlchemist.Views.MarketPage"
              x:DataType="vm:MarketViewModel"
              Title="{Binding Title}"
-             BackgroundColor="#0F0F1E">
+             BackgroundColor="{DynamicResource ThemeBackgroundPrimary}">
 
     <Grid RowDefinitions="Auto,*,Auto" Padding="10">
         
         <!-- Header -->
-        <Frame Grid.Row="0" BackgroundColor="#1A1A2E" Padding="15" Margin="0,0,0,10">
+        <Frame Grid.Row="0" BackgroundColor="{DynamicResource ThemeBackgroundSecondary}" Padding="15" Margin="0,0,0,10" BorderColor="{DynamicResource ThemePrimary}">
             <VerticalStackLayout Spacing="10">
                 <Label Text="{Binding CurrentCityName, StringFormat='Market in {0}'}"
                        FontSize="20"
                        FontAttributes="Bold"
-                       TextColor="White"/>
+                       TextColor="{DynamicResource ThemeTextPrimary}"/>
                 <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
                        FontSize="16"
-                       TextColor="#FCD34D"/>
+                       TextColor="{DynamicResource ThemeAccent3}"/>
             </VerticalStackLayout>
         </Frame>
 
@@ -32,17 +32,17 @@
                         SelectionChangedCommandParameter="{Binding SelectedItem}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="dto:MarketPriceDto">
-                    <Border BackgroundColor="#25253E" 
+                    <Border BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" 
                             Padding="15" 
                             Margin="0,5"
                             StrokeThickness="2"
-                            Stroke="#374151">
+                            Stroke="{DynamicResource ThemeBorder}">
                         <Border.Triggers>
                             <DataTrigger TargetType="Border" 
                                         Binding="{Binding Source={RelativeSource AncestorType={x:Type CollectionView}}, Path=SelectedItem.IngredientId}" 
                                         Value="{Binding IngredientId}">
-                                <Setter Property="BackgroundColor" Value="#3B3B5E"/>
-                                <Setter Property="Stroke" Value="#8B5CF6"/>
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ThemeBackgroundElevated}, Dark={StaticResource ThemeBackgroundElevated}}"/>
+                                <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource ThemePrimary}, Dark={StaticResource ThemePrimary}}"/>
                             </DataTrigger>
                         </Border.Triggers>
                         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
@@ -50,16 +50,16 @@
                                    Text="{Binding IngredientName}"
                                    FontSize="18"
                                    FontAttributes="Bold"
-                                   TextColor="White"/>
+                                   TextColor="{DynamicResource ThemeTextPrimary}"/>
                             <Label Grid.Row="0" Grid.Column="1"
                                    Text="{Binding Rarity}"
                                    FontSize="12"
-                                   TextColor="#8B5CF6"/>
+                                   TextColor="{DynamicResource ThemePrimary}"/>
                             
                             <Label Grid.Row="1" Grid.Column="0"
                                    Text="{Binding CurrentPrice, StringFormat='💰 {0:N0} coins'}"
                                    FontSize="16"
-                                   TextColor="#FCD34D"/>
+                                   TextColor="{DynamicResource ThemeAccent3}"/>
                             <Label Grid.Row="1" Grid.Column="1"
                                    Text="{Binding PriceChangePercent, StringFormat='{0:+0.0;-0.0}%'}"
                                    FontSize="14"
@@ -68,10 +68,10 @@
                             <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="15">
                                 <Label Text="{Binding AvailableQuantity, StringFormat='Available: {0}'}"
                                        FontSize="12"
-                                       TextColor="#9CA3AF"/>
+                                       TextColor="{DynamicResource ThemeTextSecondary}"/>
                                 <Label Text="{Binding PlayerQuantity, StringFormat='You own: {0}'}"
                                        FontSize="12"
-                                       TextColor="#10B981"
+                                       TextColor="{DynamicResource ThemeSuccess}"
                                        FontAttributes="Bold"/>
                             </HorizontalStackLayout>
                         </Grid>
@@ -85,16 +85,16 @@
             <Button Grid.Column="0"
                     Text="Buy"
                     Command="{Binding BuyItemCommand}"
-                    BackgroundColor="#10B981"
-                    TextColor="White"
+                    BackgroundColor="{DynamicResource ThemeSuccess}"
+                    TextColor="{DynamicResource ThemeTextPrimary}"
                     HeightRequest="50"
                     FontSize="18"
                     IsEnabled="{Binding CanBuy}"/>
             <Button Grid.Column="1"
                     Text="Sell"
                     Command="{Binding SellItemCommand}"
-                    BackgroundColor="#EF4444"
-                    TextColor="White"
+                    BackgroundColor="{DynamicResource ThemeDanger}"
+                    TextColor="{DynamicResource ThemeTextPrimary}"
                     HeightRequest="50"
                     FontSize="18"
                     IsEnabled="{Binding CanSell}"/>

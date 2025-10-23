@@ -15,14 +15,41 @@ public static class MauiProgram
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
             {
+                // Existing fonts
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                
+                // Classic Mystical fonts
+                fonts.AddFont("Cinzel-Regular.ttf", "Cinzel");
+                fonts.AddFont("Cinzel-Bold.ttf", "CinzelBold");
+                fonts.AddFont("Philosopher-Regular.ttf", "Philosopher");
+                fonts.AddFont("Philosopher-Bold.ttf", "PhilosopherBold");
+                
+                // Ethereal Light fonts
+                fonts.AddFont("CormorantGaramond-Regular.ttf", "CormorantGaramond");
+                fonts.AddFont("CormorantGaramond-Bold.ttf", "CormorantGaramondBold");
+                fonts.AddFont("PoiretOne-Regular.ttf", "PoiretOne");
+                
+                // Futuristic Dream fonts
+                fonts.AddFont("Audiowide-Regular.ttf", "Audiowide");
+                fonts.AddFont("Inter-Regular.ttf", "Inter");
+                fonts.AddFont("Inter-SemiBold.ttf", "InterSemiBold");
+                fonts.AddFont("Inter-Bold.ttf", "InterBold");
+                
+                // Body fonts (shared)
+                fonts.AddFont("Outfit-Regular.ttf", "Outfit");
+                fonts.AddFont("Outfit-SemiBold.ttf", "OutfitSemiBold");
+                fonts.AddFont("Outfit-Bold.ttf", "OutfitBold");
+                
+                // Monospace
+                fonts.AddFont("JetBrainsMono-Regular.ttf", "JetBrainsMono");
             });
 
         // Register Core Services
         builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
         builder.Services.AddSingleton<IGameStateService, GameStateService>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
+        builder.Services.AddSingleton<IThemeService, ThemeService>();
         
         // Register Game Services
         builder.Services.AddSingleton<IEventService, EventService>();

@@ -1,0 +1,2 @@
+1. Themes & font testing behind the debug flag are NOT entirely hooked up properly.  Fonts in particular look like they have a limitation in MAUI for how they are applied, so this might need to be done manually.
+2. UX still needs an entire overhaul

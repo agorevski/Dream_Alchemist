@@ -10,82 +10,82 @@
         <VerticalStackLayout Padding="20" Spacing="20">
             
             <!-- Player Info Card -->
-            <Frame BackgroundColor="#1A1A2E" CornerRadius="15" Padding="20">
+            <Frame BackgroundColor="{DynamicResource ThemeBackgroundSecondary}" CornerRadius="15" Padding="20" BorderColor="{DynamicResource ThemePrimary}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="{Binding PlayerName}" 
                            FontSize="24" 
                            FontAttributes="Bold"
-                           TextColor="White"/>
+                           TextColor="{DynamicResource ThemeTextPrimary}"/>
                     
                     <HorizontalStackLayout Spacing="20">
                         <Label Text="{Binding PlayerCoins, StringFormat='💰 {0:N0} coins'}"
                                FontSize="18"
-                               TextColor="#FCD34D"/>
+                               TextColor="{DynamicResource ThemeAccent3}"/>
                         <Label Text="{Binding CurrentDay, StringFormat='📅 Day {0}'}"
                                FontSize="18"
-                               TextColor="#06B6D4"/>
+                               TextColor="{DynamicResource ThemeSecondary}"/>
                     </HorizontalStackLayout>
                     
                     <Label Text="{Binding CurrentCityName, StringFormat='📍 {0}'}"
                            FontSize="16"
-                           TextColor="#9CA3AF"/>
+                           TextColor="{DynamicResource ThemeTextSecondary}"/>
                     
                     <Label Text="{Binding PlayerTierName}"
                            FontSize="14"
-                           TextColor="#8B5CF6"/>
+                           TextColor="{DynamicResource ThemePrimary}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <!-- Quick Stats -->
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                <Frame Grid.Column="0" BackgroundColor="#25253E" Padding="15">
+                <Frame Grid.Column="0" BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" Padding="15">
                     <VerticalStackLayout>
                         <Label Text="Trust"
                                FontSize="12"
-                               TextColor="#9CA3AF"
+                               TextColor="{DynamicResource ThemeTextSecondary}"
                                HorizontalOptions="Center"/>
                         <Label Text="{Binding TrustReputation}"
                                FontSize="20"
                                FontAttributes="Bold"
-                               TextColor="#10B981"
+                               TextColor="{DynamicResource ThemeSuccess}"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Frame>
                 
-                <Frame Grid.Column="1" BackgroundColor="#25253E" Padding="15">
+                <Frame Grid.Column="1" BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" Padding="15">
                     <VerticalStackLayout>
                         <Label Text="Infamy"
                                FontSize="12"
-                               TextColor="#9CA3AF"
+                               TextColor="{DynamicResource ThemeTextSecondary}"
                                HorizontalOptions="Center"/>
                         <Label Text="{Binding InfamyReputation}"
                                FontSize="20"
                                FontAttributes="Bold"
-                               TextColor="#EF4444"
+                               TextColor="{DynamicResource ThemeDanger}"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Frame>
                 
-                <Frame Grid.Column="2" BackgroundColor="#25253E" Padding="15">
+                <Frame Grid.Column="2" BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" Padding="15">
                     <VerticalStackLayout>
                         <Label Text="Lucidity"
                                FontSize="12"
-                               TextColor="#9CA3AF"
+                               TextColor="{DynamicResource ThemeTextSecondary}"
                                HorizontalOptions="Center"/>
                         <Label Text="{Binding LucidityReputation}"
                                FontSize="20"
                                FontAttributes="Bold"
-                               TextColor="#8B5CF6"
+                               TextColor="{DynamicResource ThemePrimary}"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Frame>
             </Grid>
 
             <!-- Quick Status -->
-            <Frame BackgroundColor="#25253E" Padding="15">
+            <Frame BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" Padding="15">
                 <Label Text="{Binding QuickStatus}"
                        FontSize="14"
-                       TextColor="White"
+                       TextColor="{DynamicResource ThemeTextPrimary}"
                        HorizontalOptions="Center"/>
             </Frame>
 
@@ -93,32 +93,32 @@
             <VerticalStackLayout Spacing="15">
                 <Button Text="🏪 Dream Market"
                         Command="{Binding NavigateToMarketCommand}"
-                        BackgroundColor="#8B5CF6"
-                        TextColor="White"
+                        BackgroundColor="{DynamicResource ThemePrimary}"
+                        TextColor="{DynamicResource ThemeTextPrimary}"
                         HeightRequest="60"
                         FontSize="18"
                         CornerRadius="10"/>
                 
                 <Button Text="🧪 Synthesis Lab"
                         Command="{Binding NavigateToLabCommand}"
-                        BackgroundColor="#EC4899"
-                        TextColor="White"
+                        BackgroundColor="{DynamicResource ThemeAccent1}"
+                        TextColor="{DynamicResource ThemeTextPrimary}"
                         HeightRequest="60"
                         FontSize="18"
                         CornerRadius="10"/>
                 
                 <Button Text="🎒 Inventory"
                         Command="{Binding NavigateToInventoryCommand}"
-                        BackgroundColor="#06B6D4"
-                        TextColor="White"
+                        BackgroundColor="{DynamicResource ThemeSecondary}"
+                        TextColor="{DynamicResource ThemeTextPrimary}"
                         HeightRequest="60"
                         FontSize="18"
                         CornerRadius="10"/>
                 
                 <Button Text="🗺️ Travel"
                         Command="{Binding NavigateToTravelCommand}"
-                        BackgroundColor="#F59E0B"
-                        TextColor="White"
+                        BackgroundColor="{DynamicResource ThemeAccent3}"
+                        TextColor="{DynamicResource ThemeTextPrimary}"
                         HeightRequest="60"
                         FontSize="18"
                         CornerRadius="10"/>
@@ -127,8 +127,8 @@
             <!-- Progress Day Button -->
             <Button Text="⏰ Sleep (Progress 1 Day)"
                     Command="{Binding ProgressDayCommand}"
-                    BackgroundColor="#374151"
-                    TextColor="White"
+                    BackgroundColor="{DynamicResource ThemeBorder}"
+                    TextColor="{DynamicResource ThemeTextPrimary}"
                     HeightRequest="50"
                     FontSize="16"
                     CornerRadius="10"
@@ -137,8 +137,8 @@
             <!-- Diagnostic Button (DEBUG ONLY - visibility and handler set in code-behind) -->
             <Button x:Name="DiagnosticsButton"
                     Text="🔧 System Diagnostics"
-                    BackgroundColor="#DC2626"
-                    TextColor="White"
+                    BackgroundColor="{DynamicResource ThemeDanger}"
+                    TextColor="{DynamicResource ThemeTextPrimary}"
                     HeightRequest="40"
                     FontSize="14"
                     CornerRadius="10"
@@ -147,14 +147,14 @@
 
             <!-- Error Message -->
             <Label Text="{Binding ErrorMessage}"
-                   TextColor="#EF4444"
+                   TextColor="{DynamicResource ThemeDanger}"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource StringIsNotNullOrEmptyConverter}}"
                    HorizontalOptions="Center"/>
 
             <!-- Loading Indicator -->
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                               IsVisible="{Binding IsBusy}"
-                              Color="#8B5CF6"/>
+                              Color="{DynamicResource ThemePrimary}"/>
         </VerticalStackLayout>
     </ScrollView>
 

@@ -6,20 +6,20 @@
              x:Class="DreamAlchemist.Views.LabPage"
              x:DataType="vm:LabViewModel"
              Title="{Binding Title}"
-             BackgroundColor="#0F0F1E">
+             BackgroundColor="{DynamicResource ThemeBackgroundPrimary}">
 
     <Grid RowDefinitions="Auto,*,Auto" Padding="10">
         
         <!-- Header -->
-        <Frame Grid.Row="0" BackgroundColor="#1A1A2E" Padding="15" Margin="0,0,0,10">
+        <Frame Grid.Row="0" BackgroundColor="{DynamicResource ThemeBackgroundSecondary}" Padding="15" Margin="0,0,0,10" BorderColor="{DynamicResource ThemeAccent1}">
             <VerticalStackLayout Spacing="10">
                 <Label Text="🧪 Dream Synthesis Lab"
                        FontSize="20"
                        FontAttributes="Bold"
-                       TextColor="White"/>
+                       TextColor="{DynamicResource ThemeTextPrimary}"/>
                 <Label Text="{Binding SelectedIngredients.Count, StringFormat='Selected: {0}/3 ingredients'}"
                        FontSize="14"
-                       TextColor="#8B5CF6"/>
+                       TextColor="{DynamicResource ThemeAccent1}"/>
             </VerticalStackLayout>
         </Frame>
 
@@ -27,9 +27,9 @@
         <Grid Grid.Row="1" RowDefinitions="Auto,*">
             <Grid Grid.Row="0" ColumnDefinitions="*,*" ColumnSpacing="5" Padding="0,0,0,10">
                 <Button Grid.Column="0" Text="Available Ingredients" 
-                        BackgroundColor="#374151" TextColor="White"/>
+                        BackgroundColor="{DynamicResource ThemeBorder}" TextColor="{DynamicResource ThemeTextPrimary}"/>
                 <Button Grid.Column="1" Text="Recipes" 
-                        BackgroundColor="#374151" TextColor="White"/>
+                        BackgroundColor="{DynamicResource ThemeBorder}" TextColor="{DynamicResource ThemeTextPrimary}"/>
             </Grid>
             
             <!-- Available Ingredients -->
@@ -37,22 +37,22 @@
                             ItemsSource="{Binding AvailableIngredients}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="entities:Ingredient">
-                        <Frame BackgroundColor="#25253E" Padding="15" Margin="0,5">
+                        <Frame BackgroundColor="{DynamicResource ThemeBackgroundTertiary}" Padding="15" Margin="0,5">
                             <Grid ColumnDefinitions="*,Auto">
                                 <VerticalStackLayout Grid.Column="0">
                                     <Label Text="{Binding Name}"
                                            FontSize="16"
-                                           TextColor="White"/>
+                                           TextColor="{DynamicResource ThemeTextPrimary}"/>
                                     <Label Text="{Binding Rarity}"
                                            FontSize="12"
-                                           TextColor="#8B5CF6"/>
+                                           TextColor="{DynamicResource ThemePrimary}"/>
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
                                         Text="+"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:LabViewModel}}, Path=AddIngredientCommand}"
                                         CommandParameter="{Binding .}"
-                                        BackgroundColor="#10B981"
-                                        TextColor="White"
+                                        BackgroundColor="{DynamicResource ThemeSuccess}"
+                                        TextColor="{DynamicResource ThemeTextPrimary}"
                                         WidthRequest="50"/>
                             </Grid>
                         </Frame>
@@ -65,15 +65,15 @@
         <VerticalStackLayout Grid.Row="2" Spacing="10" Padding="0,10,0,0">
             <Button Text="✨ Craft Dream"
                     Command="{Binding CraftDreamCommand}"
-                    BackgroundColor="#EC4899"
-                    TextColor="White"
+                    BackgroundColor="{DynamicResource ThemeAccent1}"
+                    TextColor="{DynamicResource ThemeTextPrimary}"
                     HeightRequest="50"
                     FontSize="18"
                     IsEnabled="{Binding CanCraft}"/>
             <Button Text="Clear Selection"
                     Command="{Binding ClearIngredientsCommand}"
-                    BackgroundColor="#374151"
-                    TextColor="White"
+                    BackgroundColor="{DynamicResource ThemeBorder}"
+                    TextColor="{DynamicResource ThemeTextPrimary}"
                     HeightRequest="40"/>
         </VerticalStackLayout>
     </Grid>
