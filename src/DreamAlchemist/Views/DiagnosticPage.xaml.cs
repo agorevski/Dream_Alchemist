@@ -10,16 +10,19 @@ public partial class DiagnosticPage : ContentPage
     private readonly IDatabaseService _databaseService;
     private readonly IMarketService _marketService;
     private readonly IGameStateService _gameStateService;
+    private readonly ITravelService _travelService;
 
     public DiagnosticPage(
         IDatabaseService databaseService,
         IMarketService marketService,
-        IGameStateService gameStateService)
+        IGameStateService gameStateService,
+        ITravelService travelService)
     {
         InitializeComponent();
         _databaseService = databaseService;
         _marketService = marketService;
         _gameStateService = gameStateService;
+        _travelService = travelService;
     }
 
     private async void OnRunDiagnostics(object sender, EventArgs e)
@@ -93,6 +96,45 @@ public partial class DiagnosticPage : ContentPage
             else
             {
                 output.AppendLine("   ERROR: No current city!");
+            }
+            output.AppendLine();
+
+            // Check travel service - SOMNIA TERMINAL DIAGNOSTICS
+            output.AppendLine("5. SOMNIA TERMINAL UNLOCK DIAGNOSTICS...");
+            var playerState = _gameStateService.PlayerState;
+            output.AppendLine($"   Player UnlockedCities list: [{string.Join(", ", playerState.UnlockedCities)}]");
+            output.AppendLine($"   Contains 'somnia_terminal': {playerState.UnlockedCities.Contains("somnia_terminal")}");
+            output.AppendLine();
+            
+            output.AppendLine("   Testing IsCityUnlocked('somnia_terminal'):");
+            var isSomniaUnlocked = _travelService.IsCityUnlocked("somnia_terminal");
+            output.AppendLine($"   Result: {isSomniaUnlocked}");
+            output.AppendLine();
+            
+            output.AppendLine("   Testing CanTravelToAsync('somnia_terminal'):");
+            var canTravelToSomnia = await _travelService.CanTravelToAsync("somnia_terminal");
+            output.AppendLine($"   Result: {canTravelToSomnia}");
+            output.AppendLine();
+            
+            output.AppendLine("   Testing GetUnlockedCitiesAsync():");
+            var unlockedCities = await _travelService.GetUnlockedCitiesAsync();
+            output.AppendLine($"   Total unlocked: {unlockedCities.Count}");
+            var somniaInList = unlockedCities.FirstOrDefault(c => c.Id == "somnia_terminal");
+            output.AppendLine($"   Somnia Terminal in list: {somniaInList != null}");
+            if (somniaInList != null)
+            {
+                output.AppendLine($"   Somnia name: {somniaInList.Name}");
+            }
+            output.AppendLine();
+            
+            output.AppendLine("   All cities from GetAllCitiesAsync():");
+            var allCities = await _travelService.GetAllCitiesAsync();
+            foreach (var city in allCities)
+            {
+                var unlocked = _travelService.IsCityUnlocked(city.Id);
+                var canTravel = await _travelService.CanTravelToAsync(city.Id);
+                output.AppendLine($"   - {city.Name} ({city.Id})");
+                output.AppendLine($"     Unlocked: {unlocked}, CanTravel: {canTravel}");
             }
 
         }

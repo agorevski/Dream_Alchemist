@@ -110,7 +110,7 @@ public partial class TravelViewModel : BaseViewModel
         
         if (cityViewModel.IsCurrentCity)
         {
-            TravelConfirmationMessage = "You are already in this city.";
+            TravelConfirmationMessage = "📍 You are already in this city.";
             ShowTravelConfirmation = false;
         }
         else if (!cityViewModel.CanTravel)
@@ -120,22 +120,31 @@ public partial class TravelViewModel : BaseViewModel
                                 playerState.InfamyReputation + 
                                 playerState.LucidityReputation;
             
-            // Check what's blocking travel
+            // Check what's blocking travel and show detailed information
             if (totalReputation < cityViewModel.RequiredReputation)
             {
                 var needed = cityViewModel.RequiredReputation - totalReputation;
-                TravelConfirmationMessage = $"🔒 Locked: Requires {cityViewModel.RequiredReputation} total reputation.\n" +
-                    $"Current: {totalReputation} (need {needed} more)";
+                TravelConfirmationMessage = $"🔒 LOCKED - Reputation Required\n\n" +
+                    $"Required: {cityViewModel.RequiredReputation} total reputation\n" +
+                    $"Current: {totalReputation}\n" +
+                    $"Need: {needed} more reputation points\n\n" +
+                    $"Travel Cost: {cityViewModel.TravelCost} coins\n" +
+                    $"Travel Time: {cityViewModel.TravelDays} days";
             }
             else if (playerState.Coins < cityViewModel.TravelCost)
             {
                 var needed = cityViewModel.TravelCost - playerState.Coins;
-                TravelConfirmationMessage = $"💰 Insufficient funds: Need {cityViewModel.TravelCost} coins.\n" +
-                    $"Current: {playerState.Coins} (need {needed} more)";
+                TravelConfirmationMessage = $"💰 INSUFFICIENT FUNDS\n\n" +
+                    $"Required: {cityViewModel.TravelCost} coins\n" +
+                    $"Current: {playerState.Coins} coins\n" +
+                    $"Need: {needed} more coins\n\n" +
+                    $"Travel Time: {cityViewModel.TravelDays} days";
             }
             else
             {
-                TravelConfirmationMessage = "Cannot travel to this city.";
+                TravelConfirmationMessage = $"❌ Cannot travel to this city.\n\n" +
+                    $"Cost: {cityViewModel.TravelCost} coins\n" +
+                    $"Time: {cityViewModel.TravelDays} days";
             }
             ShowTravelConfirmation = false;
         }

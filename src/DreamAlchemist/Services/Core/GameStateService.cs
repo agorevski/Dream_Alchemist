@@ -84,7 +84,8 @@ public class GameStateService : IGameStateService
         if (city == null)
             throw new ArgumentException("City not found", nameof(cityId));
 
-        if (!_playerState.UnlockedCities.Contains(cityId))
+        // Somnia Terminal is always unlocked (starting city)
+        if (cityId != "somnia_terminal" && !_playerState.UnlockedCities.Contains(cityId))
             throw new InvalidOperationException("City not unlocked");
 
         _playerState.CurrentCityId = cityId;

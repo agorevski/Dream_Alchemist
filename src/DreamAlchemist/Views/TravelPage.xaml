@@ -91,23 +91,50 @@
                                                IsVisible="{Binding IsUnlocked, Converter={StaticResource InvertedBoolConverter}}"/>
                                     </HorizontalStackLayout>
                                     
+                                    <!-- Show Travel button if can travel AND not current city -->
                                     <Button Grid.Row="3" Grid.ColumnSpan="2"
                                             Text="🚀 Travel Here"
                                             BackgroundColor="#10B981"
                                             TextColor="White"
                                             FontAttributes="Bold"
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TravelViewModel}}, Path=SelectCityCommand}"
-                                            CommandParameter="{Binding .}"
-                                            IsVisible="{Binding CanTravel}"/>
+                                            CommandParameter="{Binding .}">
+                                        <Button.Triggers>
+                                            <MultiTrigger TargetType="Button">
+                                                <MultiTrigger.Conditions>
+                                                    <BindingCondition Binding="{Binding CanTravel}" Value="True"/>
+                                                    <BindingCondition Binding="{Binding IsCurrentCity}" Value="False"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </MultiTrigger>
+                                        </Button.Triggers>
+                                        <Button.IsVisible>False</Button.IsVisible>
+                                    </Button>
                                     
-                                    <Label Grid.Row="3" Grid.ColumnSpan="2"
-                                           Text="🔒 Locked - Tap for details"
-                                           FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="#EF4444"
-                                           HorizontalOptions="Center"
-                                           Padding="10"
-                                           IsVisible="{Binding CanTravel, Converter={StaticResource InvertedBoolConverter}}"/>
+                                    <!-- Show Locked if cannot travel AND not current city -->
+                                    <Frame Grid.Row="3" Grid.ColumnSpan="2"
+                                           BackgroundColor="Transparent"
+                                           BorderColor="Transparent"
+                                           Padding="0"
+                                           InputTransparent="True">
+                                        <Frame.Triggers>
+                                            <MultiTrigger TargetType="Frame">
+                                                <MultiTrigger.Conditions>
+                                                    <BindingCondition Binding="{Binding CanTravel}" Value="False"/>
+                                                    <BindingCondition Binding="{Binding IsCurrentCity}" Value="False"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="IsVisible" Value="True"/>
+                                            </MultiTrigger>
+                                        </Frame.Triggers>
+                                        <Frame.IsVisible>False</Frame.IsVisible>
+                                        <Label Text="🔒 Locked - Tap for details"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
+                                               TextColor="#EF4444"
+                                               HorizontalOptions="Center"
+                                               Padding="10"
+                                               InputTransparent="True"/>
+                                    </Frame>
                                 </Grid>
                             </Frame>
                         </DataTemplate>

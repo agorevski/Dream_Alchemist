@@ -31,8 +31,9 @@ public class TravelService : ITravelService
         var allCities = await _databaseService.GetCitiesAsync();
         var playerState = _gameStateService.PlayerState;
         
+        // Somnia Terminal is always unlocked (starting city)
         return allCities
-            .Where(c => playerState.UnlockedCities.Contains(c.Id))
+            .Where(c => c.Id == "somnia_terminal" || playerState.UnlockedCities.Contains(c.Id))
             .ToList();
     }
 
@@ -47,6 +48,10 @@ public class TravelService : ITravelService
         // Check if already in this city
         if (playerState.CurrentCityId == cityId)
             return false;
+
+        // Somnia Terminal is always unlocked and accessible (starting city)
+        if (cityId == "somnia_terminal")
+            return true;
 
         // Check reputation requirement (for both locked and unlocked cities)
         var totalReputation = playerState.TrustReputation + 
@@ -137,6 +142,10 @@ public class TravelService : ITravelService
 
     public bool IsCityUnlocked(string cityId)
     {
+        // Somnia Terminal is always unlocked (starting city)
+        if (cityId == "somnia_terminal")
+            return true;
+            
         var playerState = _gameStateService.PlayerState;
         return playerState.UnlockedCities.Contains(cityId);
     }
