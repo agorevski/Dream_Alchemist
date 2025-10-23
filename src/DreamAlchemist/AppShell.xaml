@@ -8,6 +8,11 @@
     Shell.NavBarIsVisible="True">
 
     <ShellContent
+        Title="Welcome"
+        ContentTemplate="{DataTemplate views:WelcomePage}"
+        Route="WelcomePage" />
+
+    <ShellContent
         Title="Dream Alchemist"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />

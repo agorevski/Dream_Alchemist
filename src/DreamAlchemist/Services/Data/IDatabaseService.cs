@@ -5,7 +5,7 @@ namespace DreamAlchemist.Services.Data;
 public interface IDatabaseService
 {
     Task InitializeDatabaseAsync();
-    Task SeedDataAsync();
+    Task ClearDatabaseAsync();
     
     // Ingredients
     Task<List<Ingredient>> GetIngredientsAsync();

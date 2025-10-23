@@ -554,15 +554,13 @@ Additional docs cover crafting, inventory, travel, events, UI, graphics, progres
 ### Build & Run
 
 ```bash
-dotnet build src/DreamAlchemist/DreamAlchemist.csproj
-dotnet run --project src/DreamAlchemist/DreamAlchemist.csproj
+cd src/DreamAlchemist/ && dotnet run --project src/DreamAlchemist/DreamAlchemist.csproj
 ```
 
 ### Testing Debug Mode
 
 ```bash
-dotnet build src/DreamAlchemist/DreamAlchemist.csproj -c Debug
-dotnet run -c Debug --project src/DreamAlchemist/DreamAlchemist.csproj --framework net9.0-android
+cd src/DreamAlchemist/ && dotnet build -t:Run -c Debug -f net9.0-android
 ```
 
 ### Testing Release Mode

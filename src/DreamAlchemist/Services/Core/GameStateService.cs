@@ -24,9 +24,9 @@ public class GameStateService : IGameStateService
         _databaseService = databaseService;
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(bool forceNewGame = false)
     {
-        if (IsInitialized)
+        if (IsInitialized && !forceNewGame)
             return;
 
         await _databaseService.InitializeDatabaseAsync();
@@ -41,17 +41,7 @@ public class GameStateService : IGameStateService
         
         if (playerState == null)
         {
-            // Create new game
-            playerState = new PlayerState
-            {
-                PlayerName = "Novice Peddler",
-                Coins = GameConstants.STARTING_COINS,
-                CurrentDay = 1,
-                CurrentCityId = GameConstants.STARTING_CITY,
-                Tier = 1,
-                MaxWeight = GameConstants.STARTING_WEIGHT_CAPACITY
-            };
-            await _databaseService.SavePlayerStateAsync(playerState);
+            throw new InvalidOperationException("No saved game found. Please start a new game from the welcome screen.");
         }
 
         _playerState = playerState;

@@ -13,7 +13,7 @@ public interface IGameStateService
     event EventHandler<City>? CityChanged;
     event EventHandler<int>? DayProgressed;
     
-    Task InitializeAsync();
+    Task InitializeAsync(bool forceNewGame = false);
     Task LoadGameAsync();
     Task SaveGameAsync();
     Task ProgressTimeAsync(int days);

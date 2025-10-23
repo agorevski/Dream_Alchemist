@@ -1,18 +1,18 @@
-﻿using DreamAlchemist.Services.Core;
+﻿using DreamAlchemist.Services.Data;
 
 namespace DreamAlchemist;
 
 public partial class App : Application
 {
-    private readonly IGameStateService _gameStateService;
+    private readonly IDatabaseService _databaseService;
 
-    public App(IGameStateService gameStateService)
+    public App(IDatabaseService databaseService)
     {
         InitializeComponent();
         
-        _gameStateService = gameStateService;
+        _databaseService = databaseService;
         
-        // Initialize game state asynchronously
+        // Initialize database tables only (no game state yet)
         InitializeApp();
     }
 
@@ -20,11 +20,13 @@ public partial class App : Application
     {
         try
         {
-            await _gameStateService.InitializeAsync();
+            // Only initialize database structure, not game state
+            // Game state will be initialized from WelcomePage based on user choice
+            await _databaseService.InitializeDatabaseAsync();
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error initializing app: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Error initializing database: {ex.Message}");
         }
     }
 

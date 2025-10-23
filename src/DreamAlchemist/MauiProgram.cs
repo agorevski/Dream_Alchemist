@@ -32,6 +32,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ITravelService, TravelService>();
         
         // Register ViewModels
+        builder.Services.AddTransient<ViewModels.WelcomeViewModel>();
         builder.Services.AddTransient<ViewModels.MainViewModel>();
         builder.Services.AddTransient<ViewModels.MarketViewModel>();
         builder.Services.AddTransient<ViewModels.LabViewModel>();
@@ -39,6 +40,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ViewModels.TravelViewModel>();
         
         // Register Views
+        builder.Services.AddTransient<Views.WelcomePage>();
         builder.Services.AddTransient<Views.MainPage>();
         builder.Services.AddTransient<Views.MarketPage>();
         builder.Services.AddTransient<Views.LabPage>();

@@ -24,22 +24,6 @@ public class DatabaseService : IDatabaseService
         if (_initialized)
             return;
 
-        // TEMPORARY FIX: Force database reset to fix deserialization issues
-        // Remove this after confirming the fix works
-        try
-        {
-            await _database.DropTableAsync<Ingredient>();
-            await _database.DropTableAsync<Recipe>();
-            await _database.DropTableAsync<City>();
-            await _database.DropTableAsync<GameEvent>();
-            await _database.DropTableAsync<PlayerState>();
-            System.Diagnostics.Debug.WriteLine("Database tables dropped for reset");
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"Error dropping tables (may not exist): {ex.Message}");
-        }
-
         await _database.CreateTableAsync<Ingredient>();
         await _database.CreateTableAsync<Recipe>();
         await _database.CreateTableAsync<City>();
@@ -54,6 +38,26 @@ public class DatabaseService : IDatabaseService
         {
             await SeedDataAsync();
         }
+    }
+
+    public async Task ClearDatabaseAsync()
+    {
+        try
+        {
+            await _database.DropTableAsync<Ingredient>();
+            await _database.DropTableAsync<Recipe>();
+            await _database.DropTableAsync<City>();
+            await _database.DropTableAsync<GameEvent>();
+            await _database.DropTableAsync<PlayerState>();
+            System.Diagnostics.Debug.WriteLine("Database tables dropped for new game");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error dropping tables: {ex.Message}");
+        }
+
+        _initialized = false;
+        await InitializeDatabaseAsync();
     }
 
     public async Task SeedDataAsync()
