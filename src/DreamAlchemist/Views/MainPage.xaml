@@ -134,15 +134,16 @@
                     CornerRadius="10"
                     Margin="0,10,0,0"/>
             
-            <!-- Diagnostic Button (DEBUG) -->
-            <Button Text="🔧 Diagnostics"
-                    Clicked="OnDiagnosticsClicked"
+            <!-- Diagnostic Button (DEBUG ONLY - visibility and handler set in code-behind) -->
+            <Button x:Name="DiagnosticsButton"
+                    Text="🔧 System Diagnostics"
                     BackgroundColor="#DC2626"
                     TextColor="White"
                     HeightRequest="40"
                     FontSize="14"
                     CornerRadius="10"
-                    Margin="0,5,0,0"/>
+                    Margin="0,5,0,0"
+                    IsVisible="False"/>
 
             <!-- Error Message -->
             <Label Text="{Binding ErrorMessage}"

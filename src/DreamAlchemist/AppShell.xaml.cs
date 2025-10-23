@@ -12,6 +12,10 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("LabPage", typeof(Views.LabPage));
         Routing.RegisterRoute("InventoryPage", typeof(Views.InventoryPage));
         Routing.RegisterRoute("TravelPage", typeof(Views.TravelPage));
+
+#if DEBUG
+        // Diagnostic page only available in DEBUG builds
         Routing.RegisterRoute("DiagnosticPage", typeof(Views.DiagnosticPage));
+#endif
     }
 }

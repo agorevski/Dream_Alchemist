@@ -44,7 +44,12 @@ public static class MauiProgram
         builder.Services.AddTransient<Views.LabPage>();
         builder.Services.AddTransient<Views.InventoryPage>();
         builder.Services.AddTransient<Views.TravelPage>();
+
+#if DEBUG
+        // Diagnostic tools only available in DEBUG builds
+        builder.Services.AddTransient<ViewModels.DiagnosticViewModel>();
         builder.Services.AddTransient<Views.DiagnosticPage>();
+#endif
 
 #if DEBUG
         builder.Logging.AddDebug();
