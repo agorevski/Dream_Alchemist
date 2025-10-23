@@ -77,6 +77,13 @@ public partial class MarketViewModel : BaseViewModel
             
             System.Diagnostics.Debug.WriteLine($"Got {prices?.Count ?? 0} prices from market service");
             
+            if (prices == null || prices.Count == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("No prices returned from market service");
+                MarketItems.Clear();
+                return;
+            }
+            
             // Apply filters
             if (ShowTrendingOnly)
             {

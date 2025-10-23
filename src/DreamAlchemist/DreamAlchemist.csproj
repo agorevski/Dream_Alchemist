@@ -8,6 +8,11 @@
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Suppress non-critical warnings -->
+    <!-- XC0025: XAML binding optimization warnings -->
+    <!-- XA0141: Third-party library (SkiaSharp) Android 16 page size warning -->
+    <NoWarn>$(NoWarn);XC0025;XA0141</NoWarn>
 
     <!-- Display name -->
     <ApplicationTitle>Dream Alchemist</ApplicationTitle>

@@ -76,6 +76,12 @@ public class DatabaseService : IDatabaseService
             var json = await LoadEmbeddedResourceAsync("ingredients.json");
             System.Diagnostics.Debug.WriteLine($"Loaded ingredients JSON, length: {json?.Length ?? 0}");
             
+            if (string.IsNullOrEmpty(json))
+            {
+                System.Diagnostics.Debug.WriteLine("No ingredients JSON data to seed");
+                return;
+            }
+            
             var ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(json);
             System.Diagnostics.Debug.WriteLine($"Deserialized {ingredients?.Count ?? 0} ingredients");
             
@@ -109,6 +115,8 @@ public class DatabaseService : IDatabaseService
         try
         {
             var json = await LoadEmbeddedResourceAsync("recipes.json");
+            if (string.IsNullOrEmpty(json)) return;
+            
             var recipes = JsonConvert.DeserializeObject<List<Recipe>>(json);
             
             if (recipes != null && recipes.Count > 0)
@@ -127,6 +135,8 @@ public class DatabaseService : IDatabaseService
         try
         {
             var json = await LoadEmbeddedResourceAsync("cities.json");
+            if (string.IsNullOrEmpty(json)) return;
+            
             var cities = JsonConvert.DeserializeObject<List<City>>(json);
             
             if (cities != null && cities.Count > 0)
@@ -145,6 +155,8 @@ public class DatabaseService : IDatabaseService
         try
         {
             var json = await LoadEmbeddedResourceAsync("events.json");
+            if (string.IsNullOrEmpty(json)) return;
+            
             var events = JsonConvert.DeserializeObject<List<GameEvent>>(json);
             
             if (events != null && events.Count > 0)

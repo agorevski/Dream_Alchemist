@@ -230,37 +230,43 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 1: Game State Service
         await TestAsync(output, "GameStateService Initialization", async () =>
         {
-            return (await Task.FromResult(_gameStateService != null), "", false);
+            await Task.CompletedTask;
+            return (_gameStateService != null, "", false);
         });
 
         // Test 2: Market Service
         await TestAsync(output, "MarketService Initialization", async () =>
         {
-            return (await Task.FromResult(_marketService != null), "", false);
+            await Task.CompletedTask;
+            return (_marketService != null, "", false);
         });
 
         // Test 3: Crafting Service
         await TestAsync(output, "CraftingService Initialization", async () =>
         {
-            return (await Task.FromResult(_craftingService != null), "", false);
+            await Task.CompletedTask;
+            return (_craftingService != null, "", false);
         });
 
         // Test 4: Inventory Service
         await TestAsync(output, "InventoryService Initialization", async () =>
         {
-            return (await Task.FromResult(_inventoryService != null), "", false);
+            await Task.CompletedTask;
+            return (_inventoryService != null, "", false);
         });
 
         // Test 5: Travel Service
         await TestAsync(output, "TravelService Initialization", async () =>
         {
-            return (await Task.FromResult(_travelService != null), "", false);
+            await Task.CompletedTask;
+            return (_travelService != null, "", false);
         });
 
         // Test 6: Event Service
         await TestAsync(output, "EventService Initialization", async () =>
         {
-            return (await Task.FromResult(_eventService != null), "", false);
+            await Task.CompletedTask;
+            return (_eventService != null, "", false);
         });
     }
 
@@ -269,13 +275,15 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 1: Player State Loaded
         await TestAsync(output, "Player State Loaded", async () =>
         {
+            await Task.CompletedTask;
             var state = _gameStateService.PlayerState;
-            return (await Task.FromResult(state != null), "", false);
+            return (state != null, "", false);
         });
 
         // Test 2: Current City Set
         await TestAsync(output, "Current City Valid", async () =>
         {
+            await Task.CompletedTask;
             var city = _gameStateService.CurrentCity;
             if (city == null) return (false, "No current city set", false);
             return (true, $"Current city: {city.Name}", false);
@@ -284,6 +292,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 3: Player Coins Valid
         await TestAsync(output, "Player Coins Valid", async () =>
         {
+            await Task.CompletedTask;
             var coins = _gameStateService.PlayerState?.Coins ?? 0;
             if (coins < 0) return (false, $"Negative coins: {coins}", false);
             return (true, $"Coins: {coins:N0}", false);
@@ -292,6 +301,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 4: Reputation Values Valid
         await TestAsync(output, "Reputation Values Valid", async () =>
         {
+            await Task.CompletedTask;
             var state = _gameStateService.PlayerState;
             if (state == null) return (false, "", false);
             
@@ -309,13 +319,15 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 5: Inventory Accessible
         await TestAsync(output, "Inventory Accessible", async () =>
         {
+            await Task.CompletedTask;
             var inventory = _gameStateService.PlayerState?.Inventory;
-            return (await Task.FromResult(inventory != null), "", false);
+            return (inventory != null, "", false);
         });
 
         // Test 6: Day Counter Valid
         await TestAsync(output, "Day Counter Valid", async () =>
         {
+            await Task.CompletedTask;
             var day = _gameStateService.PlayerState?.CurrentDay ?? 0;
             if (day < 1) return (false, $"Invalid day: {day}", false);
             return (true, $"Day {day}", false);
@@ -420,6 +432,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 3: Crafting Service Can Match Recipes
         await TestAsync(output, "Recipe Matching Logic", async () =>
         {
+            await Task.CompletedTask;
             // This is a logic test, actual crafting would require ingredients
             return (true, "Service ready", true);
         });
@@ -453,6 +466,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 3: City Unlock Check
         await TestAsync(output, "City Unlock Check (Somnia)", async () =>
         {
+            await Task.CompletedTask;
             var isUnlocked = _travelService.IsCityUnlocked("somnia_terminal");
             if (!isUnlocked)
                 return (false, "Somnia Terminal should always be unlocked", false);
@@ -498,6 +512,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 2: Event Generation
         await TestAsync(output, "Event Generation Logic", async () =>
         {
+            await Task.CompletedTask;
             // Event generation is random, just verify service works
             return (true, "Service ready", true);
         });
@@ -505,6 +520,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 3: Active Events
         await TestAsync(output, "Active Events Tracking", async () =>
         {
+            await Task.CompletedTask;
             var activeEvents = _gameStateService.PlayerState?.ActiveEvents;
             if (activeEvents == null) return (false, "Cannot access active events", false);
             return (true, $"{activeEvents.Count} active events", false);
@@ -600,6 +616,7 @@ public partial class DiagnosticViewModel : BaseViewModel
         // Test 3: Memory Usage Check
         await TestAsync(output, "Memory Usage", async () =>
         {
+            await Task.CompletedTask;
             var usedMB = GC.GetTotalMemory(false) / 1024.0 / 1024.0;
             if (usedMB > 500) return (false, $"High memory: {usedMB:F1}MB", true);
             if (usedMB > 200) return (true, $"{usedMB:F1}MB (normal)", true);

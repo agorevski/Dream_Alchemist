@@ -44,6 +44,12 @@ public class MarketService : IMarketService
         
         if (city == null)
             throw new ArgumentException("City not found", nameof(cityId));
+        
+        if (ingredients == null || ingredients.Count == 0)
+        {
+            System.Diagnostics.Debug.WriteLine("No ingredients found in database");
+            return new List<MarketPriceDto>();
+        }
 
         var currentDay = _gameStateService.CurrentDay;
         var prices = new List<MarketPriceDto>();
