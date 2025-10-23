@@ -558,6 +558,20 @@ dotnet build src/DreamAlchemist/DreamAlchemist.csproj
 dotnet run --project src/DreamAlchemist/DreamAlchemist.csproj
 ```
 
+### Testing Debug Mode
+
+```bash
+dotnet build src/DreamAlchemist/DreamAlchemist.csproj -c Debug
+dotnet run -c Debug --project src/DreamAlchemist/DreamAlchemist.csproj --framework net9.0-android
+```
+
+### Testing Release Mode
+
+```bash
+dotnet build src/DreamAlchemist/DreamAlchemist.csproj -c Release
+cd src/DreamAlchemist/ && dotnet publish -c Release --framework net9.0-android
+```
+
 ### Clean & Rebuild
 
 ```bash

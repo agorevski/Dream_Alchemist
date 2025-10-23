@@ -246,7 +246,134 @@ Periodic updates each in-game day cause price fluctuations, modulated by:
 
 ---
 
-## 14. Summary
+## 14. Development Mode & Diagnostics
+
+### Running in Development Mode
+
+**Dream Alchemist** supports two build configurations:
+
+1. **DEBUG Mode** (Development)
+   - System Diagnostics page available
+   - Debug logging enabled
+   - Comprehensive test suite accessible
+   - Intended for developers and testing
+
+2. **RELEASE Mode** (Production)
+   - All diagnostic features hidden
+   - Optimized performance
+   - No debug overhead
+   - For end-users and deployment
+
+### Switching Between Modes
+
+#### Visual Studio 2022
+1. Use the configuration dropdown in the toolbar
+2. Select **Debug** or **Release**
+3. Build and run the project
+
+#### Visual Studio Code
+1. In `launch.json`, set the configuration
+2. Use F5 to build with selected configuration
+
+#### Command Line
+```bash
+# Build in DEBUG mode (includes diagnostics)
+dotnet build -c Debug
+
+# Build in RELEASE mode (production)
+dotnet build -c Release
+
+# Run in DEBUG mode
+dotnet run -c Debug --project src/DreamAlchemist/DreamAlchemist.csproj
+
+# Create production APK
+dotnet publish -c Release -f net9.0-android
+```
+
+### Accessing System Diagnostics (DEBUG Only)
+
+When running in **DEBUG mode**:
+1. Launch the app
+2. On the main page, scroll down
+3. Tap the red **🔧 System Diagnostics** button
+4. Tap **▶ Run Full Diagnostic Suite**
+
+The diagnostics will test:
+- ✅ Database connectivity and data integrity
+- ✅ All service initializations
+- ✅ Game state management
+- ✅ Market price calculations
+- ✅ Crafting system logic
+- ✅ Travel and city unlock systems
+- ✅ Event system functionality
+- ✅ Data relationships (recipes, ingredients, cities)
+- ✅ Performance metrics (query speed, memory usage)
+
+### Understanding Diagnostic Output
+
+Results are formatted as:
+- **✅ PASS** - Test succeeded
+- **❌ FAIL** - Critical issue detected
+- **⚠️ WARN** - Non-critical warning
+
+Example output:
+```
+═══════════════════════════════════════════════
+     DREAM ALCHEMIST SYSTEM DIAGNOSTICS
+═══════════════════════════════════════════════
+Run at: 2025-10-22 17:39:00
+Platform: Android
+Version: 14.0
+
+┌─────────────────────────────────────────────┐
+│           DATABASE TESTS                    │
+└─────────────────────────────────────────────┘
+✅ PASS: Database Connection
+✅ PASS: Ingredients Loading
+         15 ingredients loaded
+✅ PASS: Recipes Loading
+         20 recipes loaded
+✅ PASS: Cities Loading
+         5 cities loaded
+
+...
+
+Summary: 45 passed, 0 failed, 2 warnings
+Overall Status: ✅ ALL SYSTEMS OPERATIONAL
+```
+
+### Build Configurations in Code
+
+The app uses C# preprocessor directives to conditionally compile diagnostic code:
+
+```csharp
+#if DEBUG
+    // Diagnostic code only included in DEBUG builds
+    builder.Services.AddTransient<DiagnosticViewModel>();
+    builder.Services.AddTransient<DiagnosticPage>();
+#endif
+```
+
+This ensures:
+- Zero diagnostic overhead in production builds
+- Complete removal of debug UI elements in RELEASE mode
+- Smaller APK size for production deployment
+- No accidental diagnostic exposure to end users
+
+### Production Deployment Checklist
+
+Before deploying to Google Play:
+- [ ] Build in **RELEASE** configuration
+- [ ] Verify diagnostic button is not visible
+- [ ] Test on physical Android devices
+- [ ] Run performance profiling
+- [ ] Enable Android APK signing
+- [ ] Update version numbers in manifest
+- [ ] Review Google Play policies compliance
+
+---
+
+## 15. Summary
 
 **Dream Alchemist** is an immersive trading and crafting simulator with surreal aesthetics and economic tension. It blends the satisfying profit-chasing of *Drug Wars* with the creativity of *alchemy games*, wrapped in an evocative dream economy.
 
