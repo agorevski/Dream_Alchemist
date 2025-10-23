@@ -1,0 +1,585 @@
+# Dream Alchemist - Cline Rules
+
+## Project Context
+
+**Dream Alchemist** is a narrative-driven economic simulation game built with .NET MAUI for Android.
+
+- **Status:** 87.5% complete - Currently in Phase 8 (Testing & Deployment)
+- **Framework:** .NET MAUI 9.0 targeting Android (API 21+)
+- **Architecture:** MVVM pattern with CommunityToolkit.Mvvm
+- **Database:** SQLite-net-pcl for local persistence
+- **Lines of Code:** ~10,000+ across 85+ files
+
+**Core Game Loop:** Travel → Buy/Sell → Synthesize Dreams → Handle Events
+
+**Game Features:**
+
+- Dynamic market simulation with 15 dream ingredients
+- Crafting system with recipe discovery
+- 5 surreal cities with unique economies
+- Player progression through 5 tiers
+- Reputation system (Trust, Infamy, Lucidity)
+- Random event system with choices
+
+---
+
+## Architecture Overview
+
+### MVVM Layer Structure
+
+```text
+Views (XAML)
+    ↓ Data Binding
+ViewModels (ObservableObject)
+    ↓ Service Calls
+Services (Business Logic)
+    ↓ Data Access
+Repositories/Database
+    ↓
+Models/Entities
+```
+
+### Key Principles
+
+1. **Separation of Concerns** - Each layer has specific responsibilities
+2. **Dependency Injection** - All services and ViewModels use constructor DI
+3. **Interface-Based Design** - Services implement interfaces for testability
+4. **Single Responsibility** - Each class does one thing well
+5. **Observable Pattern** - ViewModels use CommunityToolkit.Mvvm attributes
+
+---
+
+## File Organization
+
+### Project Structure
+
+```text
+src/DreamAlchemist/
+├── Models/
+│   ├── Entities/          # Database entities (City, Ingredient, Recipe, etc.)
+│   ├── Supporting/        # Helper models (ActiveEvent, CraftedDream)
+│   ├── DTOs/             # Data transfer objects (MarketPriceDto, CraftResultDto)
+│   └── Enums/            # Enumerations (Rarity, DreamTag, EventType)
+├── Services/
+│   ├── Core/             # Core services (GameState, Database, Navigation)
+│   ├── Game/             # Game logic (Market, Crafting, Inventory, Travel, Event)
+│   ├── Data/             # Database service
+│   └── External/         # Future: AI, Audio services
+├── ViewModels/
+│   ├── Base/             # BaseViewModel with shared functionality
+│   └── *ViewModel.cs     # Page-specific ViewModels
+├── Views/
+│   ├── *Page.xaml/cs     # XAML pages with code-behind
+│   └── Controls/         # Custom reusable controls
+├── Helpers/
+│   ├── Converters/       # XAML value converters
+│   └── GameConstants.cs  # Game balance constants
+├── Resources/
+│   ├── Raw/Data/         # JSON seed files (ingredients, recipes, cities, events)
+│   ├── Styles/           # XAML resource dictionaries
+│   └── Images/           # Game assets
+└── MauiProgram.cs        # Dependency injection configuration
+```
+
+### Where to Place New Code
+
+- **New Entity:** `Models/Entities/`
+- **New Service:** `Services/Game/` (with interface in same folder)
+- **New ViewModel:** `ViewModels/`
+- **New Page:** `Views/` (XAML + code-behind)
+- **New Converter:** `Helpers/Converters/`
+- **New Enum:** `Models/Enums/`
+- **Game Data:** `Resources/Raw/Data/` (JSON format)
+
+---
+
+## Code Conventions
+
+### C# Style
+
+- **Naming:**
+  - Classes: PascalCase (e.g., `MarketService`)
+  - Interfaces: IPascalCase (e.g., `IMarketService`)
+  - Private fields: _camelCase (e.g., `_marketService`)
+  - Properties: PascalCase (e.g., `PlayerCoins`)
+  - Methods: PascalCase with Async suffix for async (e.g., `LoadDataAsync`)
+
+- **File Structure:**
+  - One class per file
+  - Filename matches class name
+  - Interfaces in same file as implementation or separate interface file
+
+- **Async/Await:**
+  - All service methods should be async
+  - Use `Task<T>` for return values
+  - Suffix async methods with `Async`
+
+### XAML Style
+
+- **Naming:**
+  - x:Name uses PascalCase (e.g., `MarketListView`)
+  - Resources use PascalCase keys
+
+- **Structure:**
+  - Group related properties together
+  - Use consistent spacing (2 spaces indentation)
+  - Prefer data binding over code-behind manipulation
+  - Use value converters for UI logic
+
+### CommunityToolkit.Mvvm Attributes
+
+```csharp
+// Observable property (auto-generates property)
+[ObservableProperty]
+private int playerCoins;  // Generates PlayerCoins property
+
+// Relay command (auto-generates command)
+[RelayCommand]
+private async Task LoadDataAsync() { }  // Generates LoadDataCommand
+
+// Observable property with validation
+[ObservableProperty]
+[NotifyCanExecuteChangedFor(nameof(BuyItemCommand))]
+private decimal selectedItemPrice;
+```
+
+---
+
+## Implementation Patterns
+
+### Creating a New ViewModel
+
+```csharp
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DreamAlchemist.ViewModels.Base;
+
+namespace DreamAlchemist.ViewModels;
+
+public partial class ExampleViewModel : BaseViewModel
+{
+    private readonly IExampleService _exampleService;
+    
+    [ObservableProperty]
+    private string exampleData = string.Empty;
+    
+    public ExampleViewModel(
+        INavigationService navigationService,
+        IExampleService exampleService)
+        : base(navigationService)
+    {
+        _exampleService = exampleService;
+        Title = "Example Page";
+    }
+    
+    public override async Task OnAppearingAsync()
+    {
+        await base.OnAppearingAsync();
+        await LoadDataAsync();
+    }
+    
+    [RelayCommand]
+    private async Task LoadDataAsync()
+    {
+        await ExecuteAsync(async () =>
+        {
+            ExampleData = await _exampleService.GetDataAsync();
+        });
+    }
+}
+```
+
+### Creating a New Service
+
+```csharp
+// Interface
+namespace DreamAlchemist.Services.Game;
+
+public interface IExampleService
+{
+    Task<string> GetDataAsync();
+    Task<bool> ProcessDataAsync(string data);
+}
+
+// Implementation
+public class ExampleService : IExampleService
+{
+    private readonly IDatabaseService _databaseService;
+    private readonly IGameStateService _gameStateService;
+    
+    public ExampleService(
+        IDatabaseService databaseService,
+        IGameStateService gameStateService)
+    {
+        _databaseService = databaseService;
+        _gameStateService = gameStateService;
+    }
+    
+    public async Task<string> GetDataAsync()
+    {
+        // Implementation
+        return await Task.FromResult("data");
+    }
+    
+    public async Task<bool> ProcessDataAsync(string data)
+    {
+        // Implementation with error handling
+        try
+        {
+            // Business logic
+            return true;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}");
+            return false;
+        }
+    }
+}
+```
+
+### Registering Dependencies
+
+Add to `MauiProgram.cs`:
+
+```csharp
+// Services (singleton for state management, transient for others)
+builder.Services.AddSingleton<IExampleService, ExampleService>();
+
+// ViewModels (transient - new instance per navigation)
+builder.Services.AddTransient<ExampleViewModel>();
+
+// Pages (transient)
+builder.Services.AddTransient<ExamplePage>();
+```
+
+---
+
+## Data Flow Guidelines
+
+### Market Price Calculation
+
+```text
+MarketService.GetCurrentPricesAsync()
+  → Fetch ingredients from database
+  → For each ingredient:
+    price = base_value × rarity_modifier × city_modifier × event_multiplier × noise(0.9-1.1)
+  → Return MarketPriceDto list
+```
+
+### Crafting Flow
+
+```text
+CraftingService.CraftDreamAsync(ingredientIds)
+  → Validate ingredients exist in inventory
+  → Check for matching recipe (known recipes first)
+  → If no match, check experimental combinations
+  → Calculate rarity and value based on ingredients
+  → Generate name (future: AI service integration)
+  → Update inventory (remove ingredients, add crafted dream)
+  → Return CraftResultDto
+```
+
+### Save/Load Flow
+
+```text
+GameStateService.SaveGameAsync()
+  → Collect PlayerState from game state
+  → Serialize inventory and active events
+  → DatabaseService.SavePlayerStateAsync()
+  → SQLite transaction commit
+```
+
+---
+
+## Key Services Reference
+
+### Core Services
+
+- **IGameStateService** - Central game state management (player, city, day, events)
+- **IDatabaseService** - SQLite operations (CRUD for all entities)
+- **INavigationService** - Page navigation wrapper around Shell
+
+### Game Services
+
+- **IMarketService** - Price calculations, buy/sell operations
+- **ICraftingService** - Recipe matching, dream synthesis
+- **IInventoryService** - Inventory management, weight limits
+- **ITravelService** - City navigation, time progression
+- **IEventService** - Random event generation, event effects
+
+### Service Dependencies
+
+Most game services depend on:
+
+- `IDatabaseService` - For data access
+- `IGameStateService` - For current state
+
+ViewModels depend on:
+
+- `INavigationService` - Always (via BaseViewModel)
+- Relevant game services for their functionality
+
+---
+
+## Database Schema
+
+### Key Entities
+
+- **Ingredient** - Dream ingredients with tags, rarity, base value
+- **Recipe** - Crafting recipes with ingredient requirements
+- **City** - Cities with tag modifiers affecting prices
+- **GameEvent** - Random events with effects on market/gameplay
+- **PlayerState** - Single-row save game with JSON serialized data
+
+### Data Loading
+
+- Seed data in `Resources/Raw/Data/*.json`
+- Loaded during app initialization in `App.xaml.cs`
+- JSON deserialized and inserted into SQLite
+
+---
+
+## Testing Guidelines
+
+### Current Status
+
+- Unit tests: Not yet implemented
+- Integration tests: Not yet implemented
+- Manual testing: In progress (Phase 8)
+
+### When Tests Are Added
+
+**Service Tests:**
+
+- Mock database service
+- Test business logic in isolation
+- Verify calculations (prices, crafting, progression)
+
+**ViewModel Tests:**
+
+- Mock all services
+- Test command execution
+- Verify observable property updates
+- Test navigation calls
+
+**Test Structure:**
+
+```csharp
+public class MarketServiceTests
+{
+    private readonly Mock<IDatabaseService> _mockDb;
+    private readonly Mock<IGameStateService> _mockGameState;
+    private readonly MarketService _sut;
+    
+    public MarketServiceTests()
+    {
+        _mockDb = new Mock<IDatabaseService>();
+        _mockGameState = new Mock<IGameStateService>();
+        _sut = new MarketService(_mockDb.Object, _mockGameState.Object);
+    }
+    
+    [Fact]
+    public async Task GetCurrentPricesAsync_ReturnsCorrectPrices()
+    {
+        // Arrange, Act, Assert
+    }
+}
+```
+
+---
+
+## Android-Specific Considerations
+
+### MAUI Configuration
+
+- **Target Framework:** net9.0-android
+- **Min SDK:** API 21 (Android 5.0)
+- **Target SDK:** API 34+ (Android 14+)
+- **Orientation:** Portrait-primary (landscape for lab view optional)
+
+### Platform Features
+
+- Touch gestures for ingredient selection
+- Haptic feedback for events (future)
+- Local notifications for time-based events (future)
+- AdMob and IAP integration (future)
+
+### Performance
+
+- Use CollectionView (not ListView) for lists
+- Implement virtualization for large lists
+- Minimize XAML nesting depth
+- Use compiled bindings where possible
+- Avoid heavy operations on UI thread
+
+---
+
+## Common Tasks
+
+### Adding a New Ingredient
+
+1. Add entry to `Resources/Raw/Data/ingredients.json`
+2. Rebuild to copy to output
+3. Database auto-seeds on next launch
+
+### Adding a New Recipe
+
+1. Add entry to `Resources/Raw/Data/recipes.json`
+2. Ensure ingredient IDs match
+3. Set appropriate rarity and value multiplier
+
+### Creating a New Page
+
+1. Add XAML in `Views/NewPage.xaml`
+2. Create ViewModel in `ViewModels/NewViewModel.cs`
+3. Register both in `MauiProgram.cs`
+4. Add route to `AppShell.xaml` if needed
+5. Wire up ViewModel in page code-behind constructor
+
+### Modifying Market Algorithm
+
+- Edit `MarketService.CalculatePrice()` method
+- Consider impact on game balance
+- Update `GameConstants.cs` for tweakable multipliers
+
+---
+
+## Current Phase: Testing & Deployment
+
+### Priority Tasks
+
+1. **Test on Android Emulator**
+   - Verify app launches without crashes
+   - Test all navigation flows
+   - Verify database operations (save/load)
+   - Check market price calculations
+   - Test crafting system with various combinations
+   - Verify inventory weight limits
+
+2. **Fix Issues**
+   - Address any runtime crashes
+   - Fix XAML binding errors
+   - Optimize performance bottlenecks
+   - Handle edge cases (empty inventory, max capacity)
+
+3. **Polish**
+   - Add proper app icon (replace placeholder)
+   - Configure splash screen
+   - Set proper app name in manifest
+   - Add error handling for network operations (future AI service)
+
+4. **Prepare Release**
+   - Create release build configuration
+   - Sign APK/AAB
+   - Prepare Google Play listing
+   - Create screenshots and promotional graphics
+
+### Known Issues
+
+- 38 XAML compiled binding warnings (non-breaking, can be optimized)
+- AI service not yet implemented (planned post-MVP)
+- Audio system not yet implemented (planned post-MVP)
+- SkiaSharp graphics not yet implemented (planned post-MVP)
+
+---
+
+## Dependencies
+
+### Current NuGet Packages
+
+- **CommunityToolkit.Mvvm** (8.2.2) - MVVM helpers and source generators
+- **SQLite-net-pcl** (1.9.172) - SQLite database
+- **Newtonsoft.Json** (13.0.3) - JSON serialization
+
+### Future Packages
+
+- **Azure.AI.OpenAI** - For AI-generated dream names/descriptions
+- **Plugin.Maui.Audio** - For music and sound effects
+- **SkiaSharp.Views.Maui** - For custom 2D graphics
+- **Google Play Billing** - For in-app purchases
+- **AdMob SDK** - For advertisements
+
+---
+
+## Best Practices
+
+### When Suggesting Changes
+
+1. **Respect existing architecture** - Don't break MVVM separation
+2. **Use dependency injection** - Don't instantiate services directly
+3. **Follow naming conventions** - Maintain consistency
+4. **Consider testability** - Keep business logic in services
+5. **Check existing patterns** - Look at similar implementations first
+6. **Update both interface and implementation** - When modifying services
+7. **Register new dependencies** - Don't forget MauiProgram.cs
+
+### Code Quality
+
+- Keep methods short and focused
+- Use meaningful variable names
+- Add XML comments for public APIs
+- Handle errors gracefully
+- Use async/await properly (don't block)
+- Dispose of database connections
+- Validate user input
+
+### XAML Quality
+
+- Use data binding over code-behind manipulation
+- Leverage value converters for UI logic
+- Keep layout hierarchy shallow
+- Use styles for consistency
+- Provide meaningful x:Name values
+
+---
+
+## Documentation Reference
+
+Complete implementation guides available in `/docs`:
+
+- `00-overview.md` - Project overview and milestones
+- `01-project-setup.md` - Initial MAUI project setup
+- `02-architecture.md` - MVVM architecture details
+- `03-data-models.md` - Entity definitions and schemas
+- `04-core-services.md` - Service layer implementation
+- `05-economy-system.md` - Market simulation algorithms
+
+Additional docs cover crafting, inventory, travel, events, UI, graphics, progression, monetization, testing, and deployment.
+
+---
+
+## Quick Reference Commands
+
+### Build & Run
+
+```bash
+dotnet build src/DreamAlchemist/DreamAlchemist.csproj
+dotnet run --project src/DreamAlchemist/DreamAlchemist.csproj
+```
+
+### Clean & Rebuild
+
+```bash
+dotnet clean
+dotnet build
+```
+
+### Database Location (Android)
+
+```text
+/data/data/com.dreamalchemist.game/files/dreamalchemist.db3
+```
+
+---
+
+## Contact & Support
+
+- **Project Type:** Solo development, AI-assisted
+- **Current Status:** Phase 8 - Testing & Deployment
+- **Version:** 1.0.0-beta
+- **Last Updated:** October 22, 2025
+
+---
+
+**Remember:** This is a complete, working game in testing phase. Changes should focus on bug fixes, optimization, and preparing for deployment rather than major architectural changes.
